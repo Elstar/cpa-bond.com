@@ -1,0 +1,12 @@
+POST http://127.0.0.1:8000/api/v1/new-lead
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer d025e4d6462b991ccc2448d9116ddfd6
+
+{
+  "stream_id": 2,
+  "name": "Сергей",
+  "phone": "0978530430",
+  "geo": "UA",
+  "ip": "213.225.36.247"
+}

@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Registration{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+                <div class="card card-signin my-5">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Регистрация</h5>
+                        {% if success %}
+                            <div class="alert alert-success" role="alert">
+                                {% trans %}Please wait while your account will be activated{% endtrans %}
+                            </div>
+                        {% else %}
+                            {% if error %}
+                                <div class="alert alert-danger" role="alert">
+                                    {{ error.messageKey|trans(error.messageData, 'security') }}
+                                </div>
+                            {% endif %}
+                            {{ form_start(registrationForm, {
+                                attr: {class: 'form-signin'}
+                            }) }}
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                            <div class="form-label-group">
+                                {{ form_widget(registrationForm.firstName) }}
+                                {{ form_label(registrationForm.firstName) }}
+                            </div>
+                            <div class="form-label-group">
+                                {{ form_widget(registrationForm.email) }}
+                                {{ form_label(registrationForm.email) }}
+                            </div>
+                            <div class="form-label-group">
+                                {{ form_widget(registrationForm.telegram) }}
+                                {{ form_label(registrationForm.telegram) }}
+                            </div>
+                            <div class="form-label-group">
+                                {{ form_widget(registrationForm.viber) }}
+                                {{ form_label(registrationForm.viber) }}
+                            </div>
+                            <div class="form-label-group">
+                                {{ form_widget(registrationForm.skype) }}
+                                {{ form_label(registrationForm.skype) }}
+                            </div>
+                            <div class="form-label-group">
+                                {{ form_widget(registrationForm.plainPassword.children['first']) }}
+                                {{ form_label(registrationForm.plainPassword.children['first']) }}
+                            </div>
+                            <div class="form-label-group">
+                                {{ form_widget(registrationForm.plainPassword.children['second']) }}
+                                {{ form_label(registrationForm.plainPassword.children['second']) }}
+                            </div>
+                            <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">{% trans %}Registration{% endtrans %}</button>
+                            <hr class="my-4">
+                            <div class="text-center"><a href="{{ path('app_login') }}">{% trans %}I am already registered{% endtrans %}</a></div>
+                            {{ form_end(registrationForm) }}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
