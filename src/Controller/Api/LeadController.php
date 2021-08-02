@@ -115,11 +115,26 @@ class LeadController extends AbstractController
                         ->setGeo($stream->getGeo())
                         ->setOffer($stream->getOffer())
                         ->setPhone($data['phone'])
-                        ->setUa($request->headers->get('User-Agent'))
                         ->setIp($ip)
                         ->setHash($hash)
                         ->setStatus(0)
+                        ->setPayStatus(0)
                     ;
+                    if (!empty($data['ua'])) {
+                        $lead->setUa($data['ua']);
+                    }
+                    if (!empty($data['utm_medium'])) {
+                        $lead->setUtmMedium($data['utm_medium']);
+                    }
+                    if (!empty($data['utm_campaign'])) {
+                        $lead->setUtmCampaign($data['utm_campaign']);
+                    }
+                    if (!empty($data['utm_content'])) {
+                        $lead->setUtmContent($data['utm_content']);
+                    }
+                    if (!empty($data['utm_term'])) {
+                        $lead->setUtmTerm($data['utm_term']);
+                    }
                     if (!empty($data['name'])) {
                         $lead->setFirstName($data['name']);
                     }

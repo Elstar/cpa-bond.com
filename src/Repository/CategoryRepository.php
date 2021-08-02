@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Category;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Gedmo\Translatable\Entity\Translation;
 
 /**
  * @method Category|null find($id, $lockMode = null, $lockVersion = null)
@@ -17,6 +18,31 @@ class CategoryRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Category::class);
+    }
+
+    public function findChildCategories(?Category $category)
+    {
+        $qb = $this->createQueryBuilder('c');
+        $qb->andWhere('c.parentId = :id');
+        if (!empty($category)) {
+            $qb->setParameter('id', $category->getId());
+        } else {
+            $qb->setParameter('id', 0);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findCategoryByNameAndParentId(string $name, int $parentId)
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.name = :name')
+            ->setParameter('name', $name)
+            ->andWhere('c.parentId = :parent_id')
+            ->setParameter('parent_id', $parentId)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
     }
 
     // /**

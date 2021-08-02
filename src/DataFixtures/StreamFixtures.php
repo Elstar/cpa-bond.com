@@ -18,6 +18,7 @@ class StreamFixtures extends BaseFixtures implements DependentFixtureInterface
     {
         $this->createMany(Stream::class, 5, function (Stream $stream) {
             $stream
+                ->setUniqueId(uniqid())
                 ->setUser($this->getRandomReference(User::class))
                 ->setName($this->faker->name)
                 ->setOffer($this->getRandomReference(Offer::class))

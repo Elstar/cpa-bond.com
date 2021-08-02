@@ -68,6 +68,11 @@ class Stream
      */
     private ?string $url;
 
+    /**
+     * @ORM\Column(type="string", length=13, unique=true)
+     */
+    private ?string $uniqueId;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -177,6 +182,18 @@ class Stream
     public function setUrl(string $url): self
     {
         $this->url = $url;
+
+        return $this;
+    }
+
+    public function getUniqueId(): ?string
+    {
+        return $this->uniqueId;
+    }
+
+    public function setUniqueId(string $uniqueId): self
+    {
+        $this->uniqueId = $uniqueId;
 
         return $this;
     }

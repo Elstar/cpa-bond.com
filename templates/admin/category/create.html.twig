@@ -1,0 +1,14 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Создание категории{% endblock %}
+
+{% block body %}
+    {% if category %}
+        <h1>{{ category.name }}</h1>
+    {% endif %}
+    {{ form_start(categoryForm) }}
+        {{ form_widget(categoryForm) }}
+        <button type="submit" class="btn btn-primary">Создать</button>
+    {{ form_end(categoryForm) }}
+{% endblock %}
+

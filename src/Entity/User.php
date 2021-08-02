@@ -82,9 +82,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $streams;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Postback::class, mappedBy="user")
+     */
+    private $postbacks;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="supportUsers")
+     */
+    private $manager;
+
+    /**
+     * @ORM\OneToMany(targetEntity=User::class, mappedBy="manager")
+     */
+    private $supportUsers;
+
     public function __construct()
     {
         $this->streams = new ArrayCollection();
+        $this->postbacks = new ArrayCollection();
+        $this->supportUsers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -283,6 +300,78 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($stream->getUser() === $this) {
                 $stream->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Postback[]
+     */
+    public function getPostbacks(): Collection
+    {
+        return $this->postbacks;
+    }
+
+    public function addPostbacks(Postback $postbacks): self
+    {
+        if (!$this->postbacks->contains($postbacks)) {
+            $this->postbacks[] = $postbacks;
+            $postbacks->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePostbacks(Postback $postbacks): self
+    {
+        if ($this->postbacks->removeElement($postbacks)) {
+            // set the owning side to null (unless already changed)
+            if ($postbacks->getUser() === $this) {
+                $postbacks->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getManager(): ?self
+    {
+        return $this->manager;
+    }
+
+    public function setManager(?self $manager): self
+    {
+        $this->manager = $manager;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|self[]
+     */
+    public function getSupportUsers(): Collection
+    {
+        return $this->supportUsers;
+    }
+
+    public function addSupportUser(self $supportUser): self
+    {
+        if (!$this->supportUsers->contains($supportUser)) {
+            $this->supportUsers[] = $supportUser;
+            $supportUser->setManager($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSupportUser(self $supportUser): self
+    {
+        if ($this->supportUsers->removeElement($supportUser)) {
+            // set the owning side to null (unless already changed)
+            if ($supportUser->getManager() === $this) {
+                $supportUser->setManager(null);
             }
         }
 

@@ -9,5 +9,8 @@
 import './styles/app.css';
 
 // start the Stimulus application
+
 import './bootstrap';
-//import { Tooltip, Toast, Popover } from 'bootstrap';
+import { Tab, Dropdown} from 'bootstrap';
+require('bootstrap-icons/font/bootstrap-icons.css');
+require('./js/a2lixSfCollection.js');

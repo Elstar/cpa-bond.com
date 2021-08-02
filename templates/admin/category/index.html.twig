@@ -1,0 +1,28 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Управление категориями{% endblock %}
+
+{% block body %}
+    {% if childCategories %}
+        <a href="{{ path('app_admin_category_create') }}" class="btn btn-info">Создать</a>
+        <div class="pt-2"></div>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for categ in childCategories %}
+                <tr>
+                    <th scope="row">{{ categ.id }}</th>
+                    <td><a href="{{ path('app_admin_category', {"id": categ.id}) }}">{{ categ.name }}</a></td>
+                    <td>Otto</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}

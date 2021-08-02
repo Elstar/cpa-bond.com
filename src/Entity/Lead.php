@@ -11,7 +11,10 @@ use Darsyn\IP\Version\Multi as IP;
 
 /**
  * @ORM\Entity(repositoryClass=LeadRepository::class)
- * @Table(name="lead",indexes={@Index(name="hash", fields={"hash"})})
+ * @Table(name="lead",indexes={
+ *     @Index(name="hash", columns={"hash"}),
+ *     @Index(name="streamIp", columns={"stream_id", "ip"})
+ * })
  */
 class Lead
 {
@@ -51,7 +54,7 @@ class Lead
     private $ip;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     private $ua;
 
@@ -80,6 +83,31 @@ class Lead
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $statusComment;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $utmMedium;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $utmCampaign;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $utmContent;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $utmTerm;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true, options={"default": 0, "unsigned":true, "comment": "0 - unpayed, 1 - payed"})
+     */
+    private $payStatus;
 
     public function getId(): ?int
     {
@@ -214,6 +242,66 @@ class Lead
     public function setStatusComment(?string $statusComment): self
     {
         $this->statusComment = $statusComment;
+
+        return $this;
+    }
+
+    public function getUtmMedium(): ?string
+    {
+        return $this->utmMedium;
+    }
+
+    public function setUtmMedium(?string $utmMedium): self
+    {
+        $this->utmMedium = $utmMedium;
+
+        return $this;
+    }
+
+    public function getUtmCampaign(): ?string
+    {
+        return $this->utmCampaign;
+    }
+
+    public function setUtmCampaign(?string $utmCampaign): self
+    {
+        $this->utmCampaign = $utmCampaign;
+
+        return $this;
+    }
+
+    public function getUtmContent(): ?string
+    {
+        return $this->utmContent;
+    }
+
+    public function setUtmContent(?string $utmContent): self
+    {
+        $this->utmContent = $utmContent;
+
+        return $this;
+    }
+
+    public function getUtmTerm(): ?string
+    {
+        return $this->utmTerm;
+    }
+
+    public function setUtmTerm(?string $utmTerm): self
+    {
+        $this->utmTerm = $utmTerm;
+
+        return $this;
+    }
+
+    public function getPayStatus(): ?int
+    {
+        return $this->payStatus;
+    }
+
+    public function setPayStatus(?int $payStatus): self
+    {
+        $this->payStatus = $payStatus;
 
         return $this;
     }
