@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20210730131622 extends AbstractMigration
+final class Version20210803202317 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,8 +20,7 @@ final class Version20210730131622 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE TABLE category (id INT UNSIGNED AUTO_INCREMENT NOT NULL, parent_id INT UNSIGNED DEFAULT 0 NOT NULL, name VARCHAR(255) NOT NULL, UNIQUE INDEX unique_name (name, parent_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE category_translations (id INT AUTO_INCREMENT NOT NULL, object_id INT UNSIGNED DEFAULT NULL, locale VARCHAR(8) NOT NULL, field VARCHAR(32) NOT NULL, content LONGTEXT DEFAULT NULL, INDEX IDX_1C60F915232D562B (object_id), UNIQUE INDEX lookup_unique_idx (locale, object_id, field), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE category (id INT UNSIGNED AUTO_INCREMENT NOT NULL, tree_root INT UNSIGNED DEFAULT NULL, parent_id INT UNSIGNED DEFAULT NULL, name VARCHAR(255) NOT NULL, lft INT DEFAULT 0 NOT NULL, lvl INT DEFAULT 0 NOT NULL, rgt INT DEFAULT 0 NOT NULL, INDEX IDX_64C19C1A977936C (tree_root), INDEX IDX_64C19C1727ACA70 (parent_id), UNIQUE INDEX unique_name (name, parent_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE currency (id INT UNSIGNED AUTO_INCREMENT NOT NULL, name VARCHAR(255) NOT NULL, sign VARCHAR(2) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE day_stats (id INT UNSIGNED AUTO_INCREMENT NOT NULL, stream_id INT UNSIGNED NOT NULL, user_id INT UNSIGNED NOT NULL, ip VARBINARY(16) NOT NULL COMMENT \'(DC2Type:ip)\', ua LONGTEXT NOT NULL, ua_hash VARCHAR(32) NOT NULL, visits INT UNSIGNED DEFAULT 1 NOT NULL, ref VARCHAR(255) DEFAULT NULL, pre_landing_visits INT UNSIGNED DEFAULT 0 NOT NULL, landing_visits INT UNSIGNED DEFAULT 0 NOT NULL, pre_landing_page_visits INT UNSIGNED DEFAULT 0 NOT NULL, created_at DATETIME NOT NULL, updated_at DATETIME NOT NULL, INDEX IDX_EE8ADB4ED0ED463E (stream_id), INDEX IDX_EE8ADB4EA76ED395 (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE ext_translations (id INT AUTO_INCREMENT NOT NULL, locale VARCHAR(8) NOT NULL, object_class VARCHAR(191) NOT NULL, field VARCHAR(32) NOT NULL, foreign_key VARCHAR(64) NOT NULL, content LONGTEXT DEFAULT NULL, INDEX translations_lookup_idx (locale, object_class, foreign_key), UNIQUE INDEX lookup_unique_idx (locale, object_class, field, foreign_key), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB ROW_FORMAT = DYNAMIC');
@@ -37,7 +36,8 @@ final class Version20210730131622 extends AbstractMigration
         $this->addSql('CREATE TABLE pre_landing_page (id INT UNSIGNED AUTO_INCREMENT NOT NULL, name VARCHAR(255) NOT NULL, url VARCHAR(255) NOT NULL, cr INT UNSIGNED DEFAULT 0 NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE stream (id INT UNSIGNED AUTO_INCREMENT NOT NULL, user_id INT UNSIGNED NOT NULL, offer_id INT UNSIGNED NOT NULL, pre_landing_id INT UNSIGNED DEFAULT NULL, landing_id INT UNSIGNED DEFAULT NULL, pre_landing_page_id INT UNSIGNED DEFAULT NULL, geo_id INT UNSIGNED NOT NULL, pay_type_id INT UNSIGNED NOT NULL, name VARCHAR(255) NOT NULL, url VARCHAR(255) NOT NULL, unique_id VARCHAR(13) NOT NULL, created_at DATETIME NOT NULL, updated_at DATETIME NOT NULL, UNIQUE INDEX UNIQ_F0E9BE1CE3C68343 (unique_id), INDEX IDX_F0E9BE1CA76ED395 (user_id), INDEX IDX_F0E9BE1C53C674EE (offer_id), INDEX IDX_F0E9BE1CB698DEF7 (pre_landing_id), INDEX IDX_F0E9BE1CEFD98736 (landing_id), INDEX IDX_F0E9BE1CA743AD6C (pre_landing_page_id), INDEX IDX_F0E9BE1CFA49D0B (geo_id), INDEX IDX_F0E9BE1C23A64B58 (pay_type_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE user (id INT UNSIGNED AUTO_INCREMENT NOT NULL, manager_id INT UNSIGNED DEFAULT NULL, email VARCHAR(180) NOT NULL, roles JSON NOT NULL, password VARCHAR(255) NOT NULL, first_name VARCHAR(32) NOT NULL, balance DOUBLE PRECISION DEFAULT \'0\' NOT NULL, api_token VARCHAR(32) NOT NULL, activate INT UNSIGNED DEFAULT 0 NOT NULL, telegram VARCHAR(32) DEFAULT NULL, viber VARCHAR(32) DEFAULT NULL, skype VARCHAR(32) DEFAULT NULL, created_at DATETIME NOT NULL, updated_at DATETIME NOT NULL, UNIQUE INDEX UNIQ_8D93D649E7927C74 (email), UNIQUE INDEX UNIQ_8D93D6497BA2F5EB (api_token), INDEX IDX_8D93D649783E3463 (manager_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('ALTER TABLE category_translations ADD CONSTRAINT FK_1C60F915232D562B FOREIGN KEY (object_id) REFERENCES category (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE category ADD CONSTRAINT FK_64C19C1A977936C FOREIGN KEY (tree_root) REFERENCES category (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE category ADD CONSTRAINT FK_64C19C1727ACA70 FOREIGN KEY (parent_id) REFERENCES category (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE day_stats ADD CONSTRAINT FK_EE8ADB4ED0ED463E FOREIGN KEY (stream_id) REFERENCES stream (id)');
         $this->addSql('ALTER TABLE day_stats ADD CONSTRAINT FK_EE8ADB4EA76ED395 FOREIGN KEY (user_id) REFERENCES user (id)');
         $this->addSql('ALTER TABLE lead ADD CONSTRAINT FK_289161CBD0ED463E FOREIGN KEY (stream_id) REFERENCES stream (id)');
@@ -63,7 +63,8 @@ final class Version20210730131622 extends AbstractMigration
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE category_translations DROP FOREIGN KEY FK_1C60F915232D562B');
+        $this->addSql('ALTER TABLE category DROP FOREIGN KEY FK_64C19C1A977936C');
+        $this->addSql('ALTER TABLE category DROP FOREIGN KEY FK_64C19C1727ACA70');
         $this->addSql('ALTER TABLE offer DROP FOREIGN KEY FK_29D6873E12469DE2');
         $this->addSql('ALTER TABLE offer DROP FOREIGN KEY FK_29D6873E38248176');
         $this->addSql('ALTER TABLE lead DROP FOREIGN KEY FK_289161CBFA49D0B');
@@ -85,7 +86,6 @@ final class Version20210730131622 extends AbstractMigration
         $this->addSql('ALTER TABLE stream DROP FOREIGN KEY FK_F0E9BE1CA76ED395');
         $this->addSql('ALTER TABLE user DROP FOREIGN KEY FK_8D93D649783E3463');
         $this->addSql('DROP TABLE category');
-        $this->addSql('DROP TABLE category_translations');
         $this->addSql('DROP TABLE currency');
         $this->addSql('DROP TABLE day_stats');
         $this->addSql('DROP TABLE ext_translations');

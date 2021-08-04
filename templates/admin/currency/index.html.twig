@@ -1,0 +1,30 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}{% trans %}Currency{% endtrans %}{% endblock %}
+
+{% block body %}
+    <a href="{{ path('app_admin_currency_create') }}" class="btn btn-info">{% trans %}Create{% endtrans %}</a>
+    {% if currencies %}
+        <div class="pt-2"></div>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th class="col-1" scope="col">#</th>
+                <th scope="col">{% trans %}Name{% endtrans %}</th>
+                <th scope="col-1">{% trans %}Sign{% endtrans %}</th>
+                <th class="col-1" scope="col">{% trans %}Actions{% endtrans %}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for currency in currencies %}
+                <tr>
+                    <th scope="row">{{ currency.id }}</th>
+                    <td>{{ currency.name }}</td>
+                    <td>{{ currency.sign }}</td>
+                    <td><a class="bi-pen" href="{{ path('app_admin_currency_edit', {"id": currency.id}) }}"></a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}

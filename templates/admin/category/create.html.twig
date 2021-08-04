@@ -3,12 +3,17 @@
 {% block title %}Создание категории{% endblock %}
 
 {% block body %}
+    {% include 'admin/partial/category.breadcrumb.html.twig' %}
     {% if category %}
-        <h1>{{ category.name }}</h1>
+        <h3>{% trans %}Create category inside category{% endtrans %} "{{ category.name }}"</h3>
     {% endif %}
     {{ form_start(categoryForm) }}
         {{ form_widget(categoryForm) }}
-        <button type="submit" class="btn btn-primary">Создать</button>
+        {% if app.request.attributes.get('_route') == 'app_admin_category_create' %}
+            <button type="submit" class="btn btn-primary">{% trans %}Create{% endtrans %}</button>
+        {% else %}
+            <button type="submit" class="btn btn-primary">{% trans %}Edit{% endtrans %}</button>
+        {% endif %}
     {{ form_end(categoryForm) }}
 {% endblock %}
 

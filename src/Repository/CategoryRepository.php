@@ -3,9 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Category;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
-use Gedmo\Translatable\Entity\Translation;
+use Doctrine\ORM\EntityManagerInterface;
+use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
 /**
  * @method Category|null find($id, $lockMode = null, $lockVersion = null)
@@ -13,36 +12,45 @@ use Gedmo\Translatable\Entity\Translation;
  * @method Category[]    findAll()
  * @method Category[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class CategoryRepository extends ServiceEntityRepository
+class CategoryRepository extends NestedTreeRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(EntityManagerInterface $manager)
     {
-        parent::__construct($registry, Category::class);
+        parent::__construct($manager, $manager->getClassMetadata(Category::class));
+    }
+
+    /**
+     * @param string $name
+     * @param int|null $parent
+     * @return int|mixed|string|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findCategoryByNameAndParentId(string $name, ?int $parent)
+    {
+
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.name = :name')
+            ->setParameter('name', $name)
+            ->andWhere('c.parent = :parent_id')
+            ->setParameter('parent_id', $parent)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
     }
 
     public function findChildCategories(?Category $category)
     {
-        $qb = $this->createQueryBuilder('c');
-        $qb->andWhere('c.parentId = :id');
+
         if (!empty($category)) {
-            $qb->setParameter('id', $category->getId());
+            return $this->createQueryBuilder('c')
+                ->andWhere('c.parent = :id')
+                ->setParameter('id', $category->getId())
+                ->getQuery()
+                ->getResult()
+            ;
         } else {
-            $qb->setParameter('id', 0);
+            return $this->getRootNodes('id', 'DESC');
         }
-
-        return $qb->getQuery()->getResult();
-    }
-
-    public function findCategoryByNameAndParentId(string $name, int $parentId)
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.name = :name')
-            ->setParameter('name', $name)
-            ->andWhere('c.parentId = :parent_id')
-            ->setParameter('parent_id', $parentId)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
     }
 
     // /**

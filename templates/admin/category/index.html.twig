@@ -1,17 +1,23 @@
 {% extends 'admin/base.html.twig' %}
 
-{% block title %}Управление категориями{% endblock %}
+{% block title %}{% trans %}Category management{% endtrans %}{% endblock %}
 
 {% block body %}
+    {% include 'admin/partial/category.breadcrumb.html.twig' %}
+    {% if category %}
+        <a href="{{ path('app_admin_category_create', {"id": category.id}) }}" class="btn btn-info">{% trans %}Create{% endtrans %}</a>
+    {% else %}
+        <a href="{{ path('app_admin_category_create') }}" class="btn btn-info">{% trans %}Create{% endtrans %}</a>
+    {% endif %}
+
     {% if childCategories %}
-        <a href="{{ path('app_admin_category_create') }}" class="btn btn-info">Создать</a>
         <div class="pt-2"></div>
         <table class="table table-hover">
             <thead>
             <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Actions</th>
+                <th class="col-1" scope="col">#</th>
+                <th scope="col">{% trans %}Name{% endtrans %}</th>
+                <th class="col-1" scope="col">{% trans %}Actions{% endtrans %}</th>
             </tr>
             </thead>
             <tbody>
@@ -19,7 +25,7 @@
                 <tr>
                     <th scope="row">{{ categ.id }}</th>
                     <td><a href="{{ path('app_admin_category', {"id": categ.id}) }}">{{ categ.name }}</a></td>
-                    <td>Otto</td>
+                    <td><a class="bi-pen" href="{{ path('app_admin_category_edit', {"id": categ.id}) }}"></a></td>
                 </tr>
             {% endfor %}
             </tbody>

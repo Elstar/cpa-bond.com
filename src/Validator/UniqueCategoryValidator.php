@@ -30,11 +30,12 @@ class UniqueCategoryValidator extends ConstraintValidator
             return;
         }
 
-        $parentId = $this->context->getRoot()->get('parentId')->getData();
 
-        if ($this->categoryRepository->findCategoryByNameAndParentId($value, $parentId)) {
+        $parent = $this->context->getRoot()->get('parent')->getData();
+
+        if ($this->categoryRepository->findCategoryByNameAndParentId($value, $parent)) {
             $message = $this->translator->trans($constraint->message);
-            $this->context->buildViolation($constraint->message)
+            $this->context->buildViolation($message)
                 ->addViolation();
         }
     }

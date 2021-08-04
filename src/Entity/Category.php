@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\CategoryRepository;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\UniqueConstraint;
 use Doctrine\ORM\Mapping\Table;
@@ -12,7 +11,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 /**
  * @ORM\Entity(repositoryClass=CategoryRepository::class)
  * @Table(name="category", uniqueConstraints={@UniqueConstraint(name="unique_name", columns={"name", "parent_id"})})
- * @Gedmo\TranslationEntity(class="App\Entity\CategoryTranslation")
+ * @Gedmo\Tree(type="nested")
  */
 class Category
 {
@@ -23,11 +22,6 @@ class Category
      * @ORM\Column(type="integer", options={"unsigned":true})
      */
     private $id;
-
-    /**
-     * @ORM\Column(type="integer", options={"default": 0, "unsigned":true})
-     */
-    private $parentId;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -41,47 +35,47 @@ class Category
     private $locale;
 
     /**
-     * @ORM\OneToMany(
-     *   targetEntity="CategoryTranslation",
-     *   mappedBy="object",
-     *   cascade={"persist", "remove"}
-     * )
+     * @Gedmo\TreeLeft
+     * @ORM\Column(name="lft", type="integer", options={"default":0})
      */
-    private $translations;
+    private $lft;
 
-    public function __construct()
-    {
-        $this->translations = new ArrayCollection();
-    }
+    /**
+     * @Gedmo\TreeLevel
+     * @ORM\Column(name="lvl", type="integer", options={"default":0})
+     */
+    private $lvl;
 
-    public function getTranslations()
-    {
-        return $this->translations;
-    }
+    /**
+     * @Gedmo\TreeRight
+     * @ORM\Column(name="rgt", type="integer", options={"default":0})
+     */
+    private $rgt;
 
-    public function addTranslation(CategoryTranslation $t)
-    {
-        if (!$this->translations->contains($t)) {
-            $this->translations[] = $t;
-            $t->setObject($this);
-        }
-    }
+    /**
+     * @Gedmo\TreeRoot
+     * @ORM\ManyToOne(targetEntity="Category")
+     * @ORM\JoinColumn(name="tree_root", referencedColumnName="id", onDelete="CASCADE")
+     */
+    private $root;
+
+    /**
+     * @Gedmo\TreeParent
+     * @ORM\ManyToOne(targetEntity="Category", inversedBy="children")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
+     * @var Category|null $parent
+     */
+    private $parent;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Category", mappedBy="parent")
+     * @ORM\OrderBy({"lft" = "ASC"})
+     */
+    private $children;
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getParentId(): ?int
-    {
-        return $this->parentId;
-    }
-
-    public function setParentId(int $parentId): self
-    {
-        $this->parentId = $parentId;
-
-        return $this;
     }
 
     public function getName(): ?string
@@ -101,11 +95,43 @@ class Category
         $this->locale = $locale;
     }
 
-    public function setTranslations($at)
+    public function getLocale()
     {
-        foreach ($at as $t) {
-            $this->addTranslation($t);
-        }
+        return $this->locale;
+    }
+
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
+    }
+
+    public function getRoot()
+    {
+        return $this->root;
+    }
+
+    public function setParent(Category $parent = null)
+    {
+        $this->parent = $parent;
+    }
+
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    public function getLvl()
+    {
+        return $this->lvl;
+    }
+
+    public function setDefautl()
+    {
+        $this->lvl = 0;
+        $this->lft = 0;
+        $this->rgt = 0;
+
         return $this;
     }
+
 }

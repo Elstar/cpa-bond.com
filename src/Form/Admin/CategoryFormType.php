@@ -2,12 +2,11 @@
 
 namespace App\Form\Admin;
 
-use A2lix\TranslationFormBundle\Form\Type\TranslationsType;
 use App\Entity\Category;
-use App\Entity\CategoryTranslation;
+use App\Form\Type\LocalesType;
 use App\Validator\UniqueCategory;
-use Gedmo\Translator\Translation;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\ChoiceList\ChoiceList;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -18,23 +17,33 @@ class CategoryFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        /**
+         * @var Category $category
+         */
+        $category = $options['data'] ?? null;
+
+        $parentId = $category->getParent() ? $category->getParent()->getId() : 0;
+
         $builder
-            ->add('parentId', HiddenType::class)
-            /*->add('name', TextType::class, [
-                'label' => 'Название категории',
+            ->add('parent', HiddenType::class, [
+                'mapped' => false,
+                'data' => $parentId
+            ])
+            ->add('name', TextType::class, [
+                'label' => 'Category name',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Вы не ввели название категории'
+                        'message' => 'You did not enter a category name'
                     ]),
                     new UniqueCategory()
                 ]
-            ])*/
-            ->add('translations', 'translatable', [
-                'field' => 'name',
-                'property_path' => 'translations',
-                'personal_translation' => CategoryTranslation::class
-            ])
-        ;
+            ]);
+        if (!empty($category) && $category->getId()) {
+            $builder->add('locale', LocalesType::class, [
+                'label' => 'Language',
+                'data' => $category->getLocale()
+            ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver)

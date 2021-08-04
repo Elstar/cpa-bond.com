@@ -4,13 +4,13 @@
             <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="{{ path('app_admin_category') }}">
                     <i class="bi-building"></i>
-                    Управление категориями
+                    {% trans %}Category management{% endtrans %}
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <span data-feather="file"></span>
-                    Orders
+                <a class="nav-link" href="{{ path('app_admin_currency') }}">
+                    <i class="bi-currency-exchange"></i>
+                    {% trans %}Currency{% endtrans %}
                 </a>
             </li>
             <li class="nav-item">

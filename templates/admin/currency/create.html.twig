@@ -1,0 +1,30 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block body %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb bg-dark">
+        <li class="breadcrumb-item"><a href="{{ path('app_admin_currency') }}">{% trans %}Currency{% endtrans %}</a></li>
+        <li class="breadcrumb-item active">
+            {% if currency %}
+                {% trans %}Edit{% endtrans %}
+            {% else %}
+                {% trans %}Create{% endtrans %}
+            {% endif %}
+        </li>
+    </ol>
+</nav>
+    {{ form_start(currencyForm, {attr: {class: 'form-inline'}}) }}
+            {{ form_row(currencyForm.name) }}
+            {{ form_row(currencyForm.sign) }}
+        {% if currency %}
+            <button type="submit" class="btn btn-primary mb-2">{% trans %}Edit{% endtrans %}</button>
+        {% else %}
+            <button type="submit" class="btn btn-primary mb-2">{% trans %}Create{% endtrans %}</button>
+        {% endif %}
+    {{ form_end(currencyForm) }}
+{% endblock %}
+
+{% block title %}
+    {% trans %}Currency{% endtrans %}
+{% endblock %}
+

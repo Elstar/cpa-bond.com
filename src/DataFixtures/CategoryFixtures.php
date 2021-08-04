@@ -5,20 +5,30 @@ namespace App\DataFixtures;
 use App\Entity\Category;
 use App\Entity\CategoryTranslation;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class CategoryFixtures extends BaseFixtures
 {
 
+    /**
+     * @var array|bool|float|int|string|null
+     */
+    private $locales;
+
+    public function __construct(ContainerInterface $container)
+    {
+        $this->locales = $container->getParameter('locales');
+    }
+
     function loadData(ObjectManager $manager)
     {
         $this->createMany(Category::class, 10, function (Category $category) {
+            
             $category
                 ->setName($this->faker->name)
-                ->setParentId(0)
+                ->setDefautl()
+                ->setTranslatableLocale('uk')
             ;
-            $category->addTranslation(new CategoryTranslation('ru', 'name', $this->faker->name));
-            $category->addTranslation(new CategoryTranslation('uk', 'name', $this->faker->name));
-            $category->addTranslation(new CategoryTranslation('en', 'name', $this->faker->name));
         });
         $manager->flush();
     }
