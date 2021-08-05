@@ -12,6 +12,7 @@ class GeoFixtures extends BaseFixtures
         $this->createMany(Geo::class, 1, function (Geo $geo) {
             $geo
                 ->setName('UA')
+                ->setCountry('Ukraine')
             ;
         });
 

@@ -1,0 +1,31 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}
+    {% trans %}Geo{% endtrans %}
+{% endblock %}
+
+{% block body %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-dark">
+            <li class="breadcrumb-item"><a href="{{ path('app_admin_geo') }}">{% trans %}Geo{% endtrans %}</a></li>
+            <li class="breadcrumb-item active">
+                {% if geo %}
+                    {% trans %}Edit{% endtrans %}
+                {% else %}
+                    {% trans %}Create{% endtrans %}
+                {% endif %}
+            </li>
+        </ol>
+    </nav>
+    {{ form_start(geoForm) }}
+        {{ form_row(geoForm.name) }}
+        {{ form_row(geoForm.country) }}
+        {{ form_row(geoForm.image) }}
+        {% if geo %}
+            <button type="submit" class="btn btn-primary mb-2">{% trans %}Edit{% endtrans %}</button>
+        {% else %}
+            <button type="submit" class="btn btn-primary mb-2">{% trans %}Create{% endtrans %}</button>
+        {% endif %}
+    {{ form_end(geoForm) }}
+{% endblock %}
+

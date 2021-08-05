@@ -14,3 +14,4 @@ import './bootstrap';
 import { Tab, Dropdown} from 'bootstrap';
 require('bootstrap-icons/font/bootstrap-icons.css');
 require('./js/a2lixSfCollection.js');
+require('./js/bootstrap_file_field')

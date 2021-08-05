@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "16d931dc4b1057f6984159c9e2400304",
+    "content-hash": "d3998db452e4f804220dc6516a76c07b",
     "packages": [
         {
             "name": "a2lix/auto-form-bundle",
@@ -2154,6 +2154,147 @@
             "time": "2021-07-09T11:58:40+00:00"
         },
         {
+            "name": "league/flysystem",
+            "version": "2.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/flysystem.git",
+                "reference": "29a3ba148287db3142412ef34f6fdcbc22c957cd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/29a3ba148287db3142412ef34f6fdcbc22c957cd",
+                "reference": "29a3ba148287db3142412ef34f6fdcbc22c957cd",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "league/mime-type-detection": "^1.0.0",
+                "php": "^7.2 || ^8.0"
+            },
+            "conflict": {
+                "guzzlehttp/ringphp": "<1.1.1"
+            },
+            "require-dev": {
+                "async-aws/s3": "^1.5",
+                "async-aws/simple-s3": "^1.0",
+                "aws/aws-sdk-php": "^3.132.4",
+                "composer/semver": "^3.0",
+                "ext-fileinfo": "*",
+                "friendsofphp/php-cs-fixer": "^2.16",
+                "google/cloud-storage": "^1.23",
+                "phpseclib/phpseclib": "^2.0",
+                "phpstan/phpstan": "^0.12.26",
+                "phpunit/phpunit": "^8.5 || ^9.4",
+                "sabre/dav": "^4.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "League\\Flysystem\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Frank de Jonge",
+                    "email": "info@frankdejonge.nl"
+                }
+            ],
+            "description": "File storage abstraction for PHP",
+            "keywords": [
+                "WebDAV",
+                "aws",
+                "cloud",
+                "file",
+                "files",
+                "filesystem",
+                "filesystems",
+                "ftp",
+                "s3",
+                "sftp",
+                "storage"
+            ],
+            "support": {
+                "issues": "https://github.com/thephpleague/flysystem/issues",
+                "source": "https://github.com/thephpleague/flysystem/tree/2.2.0"
+            },
+            "funding": [
+                {
+                    "url": "https://offset.earth/frankdejonge",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/frankdejonge",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/league/flysystem",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2021-07-20T16:54:08+00:00"
+        },
+        {
+            "name": "league/mime-type-detection",
+            "version": "1.7.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/mime-type-detection.git",
+                "reference": "3b9dff8aaf7323590c1d2e443db701eb1f9aa0d3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/mime-type-detection/zipball/3b9dff8aaf7323590c1d2e443db701eb1f9aa0d3",
+                "reference": "3b9dff8aaf7323590c1d2e443db701eb1f9aa0d3",
+                "shasum": ""
+            },
+            "require": {
+                "ext-fileinfo": "*",
+                "php": "^7.2 || ^8.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.18",
+                "phpstan/phpstan": "^0.12.68",
+                "phpunit/phpunit": "^8.5.8 || ^9.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "League\\MimeTypeDetection\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Frank de Jonge",
+                    "email": "info@frankdejonge.nl"
+                }
+            ],
+            "description": "Mime-type detection for Flysystem",
+            "support": {
+                "issues": "https://github.com/thephpleague/mime-type-detection/issues",
+                "source": "https://github.com/thephpleague/mime-type-detection/tree/1.7.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/frankdejonge",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/league/flysystem",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2021-01-18T20:58:21+00:00"
+        },
+        {
             "name": "maxmind-db/reader",
             "version": "v1.10.1",
             "source": {
@@ -2363,6 +2504,93 @@
                 }
             ],
             "time": "2021-07-23T07:42:52+00:00"
+        },
+        {
+            "name": "oneup/flysystem-bundle",
+            "version": "4.0.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/1up-lab/OneupFlysystemBundle.git",
+                "reference": "70dc1957c6f99fa194428f9864e953373afe8168"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/1up-lab/OneupFlysystemBundle/zipball/70dc1957c6f99fa194428f9864e953373afe8168",
+                "reference": "70dc1957c6f99fa194428f9864e953373afe8168",
+                "shasum": ""
+            },
+            "require": {
+                "league/flysystem": "^2.0",
+                "php": "^7.4 || ^8.0",
+                "symfony/config": "^4.4 || ^5.0",
+                "symfony/dependency-injection": "^4.4 || ^5.0",
+                "symfony/http-kernel": "^4.4 || ^5.1.5"
+            },
+            "require-dev": {
+                "ext-simplexml": "*",
+                "friendsofphp/php-cs-fixer": "^2.16",
+                "league/flysystem-async-aws-s3": "^2.0",
+                "league/flysystem-aws-s3-v3": "^2.0",
+                "league/flysystem-ftp": "^2.0",
+                "league/flysystem-memory": "^2.0",
+                "league/flysystem-sftp": "^2.0",
+                "phpstan/phpstan": "^0.12.10",
+                "phpunit/phpunit": "^8.5",
+                "royvoetman/flysystem-gitlab-storage": "^2.0",
+                "symfony/asset": "^4.4 || ^5.0",
+                "symfony/browser-kit": "^4.4 || ^5.0",
+                "symfony/finder": "^4.4 || ^5.0",
+                "symfony/framework-bundle": "^4.4 || ^5.0",
+                "symfony/phpunit-bridge": "^5.0",
+                "symfony/templating": "^4.4 || ^5.0",
+                "symfony/translation": "^4.4 || ^5.0",
+                "symfony/yaml": "^4.4 || ^5.0"
+            },
+            "suggest": {
+                "ext-fileinfo": "Required for MimeType",
+                "ext-ftp": "Required for FTP and SFTP",
+                "league/flysystem-async-aws-s3": "Use flysystem S3 adapter from AsyncAws",
+                "league/flysystem-aws-s3-v3": "Use S3 storage with AWS SDK v3",
+                "league/flysystem-sftp": "Allows SFTP server storage via phpseclib",
+                "royvoetman/flysystem-gitlab-storage": "Use Gitlab Storage filesystem for Flysystem"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-4": {
+                    "Oneup\\FlysystemBundle\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jim Schmid",
+                    "email": "js@1up.io",
+                    "homepage": "https://1up.io",
+                    "role": "Developer"
+                },
+                {
+                    "name": "David Greminger",
+                    "email": "dg@1up.io",
+                    "homepage": "https://1up.io",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Integrates Flysystem filesystem abstraction library to your Symfony project.",
+            "homepage": "https://1up.io",
+            "keywords": [
+                "Flysystem",
+                "abstraction",
+                "filesystem",
+                "symfony"
+            ],
+            "support": {
+                "issues": "https://github.com/1up-lab/OneupFlysystemBundle/issues",
+                "source": "https://github.com/1up-lab/OneupFlysystemBundle/tree/4.0.7"
+            },
+            "time": "2021-05-12T06:52:59+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",

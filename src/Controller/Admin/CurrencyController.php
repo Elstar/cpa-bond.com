@@ -32,7 +32,7 @@ class CurrencyController extends AbstractController
     public function create(Request $request, EntityManagerInterface $em): Response
     {
 
-        $currencyForm = $this->createForm(CurrencyFormType::class);
+        $currencyForm = $this->createForm(CurrencyFormType::class, new Currency());
 
         if ($this->handleFormRequest($currencyForm, $em, $request)) {
             $this->addFlash('flash_message', 'Currency added successfully');
@@ -67,7 +67,7 @@ class CurrencyController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             /**
-             * @var Currency $article
+             * @var Currency $currency
              */
             $currency = $form->getData();
 

@@ -23,9 +23,14 @@ class Geo
     private $name;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(type="string", length=32)
      */
-    private $flag;
+    private $country;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $imageFilename;
 
     public function getId(): ?int
     {
@@ -44,14 +49,26 @@ class Geo
         return $this;
     }
 
-    public function getFlag(): ?string
+    public function getCountry(): ?string
     {
-        return $this->flag;
+        return $this->country;
     }
 
-    public function setFlag(?string $flag): self
+    public function setCountry(string $country): self
     {
-        $this->flag = $flag;
+        $this->country = $country;
+
+        return $this;
+    }
+
+    public function getImageFilename(): ?string
+    {
+        return $this->imageFilename;
+    }
+
+    public function setImageFilename(?string $imageFilename): self
+    {
+        $this->imageFilename = $imageFilename;
 
         return $this;
     }
