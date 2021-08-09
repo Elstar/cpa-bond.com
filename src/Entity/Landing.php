@@ -4,9 +4,12 @@ namespace App\Entity;
 
 use App\Repository\LandingRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Table;
+use Doctrine\ORM\Mapping\UniqueConstraint;
 
 /**
  * @ORM\Entity(repositoryClass=LandingRepository::class)
+ * @Table(name="landing", uniqueConstraints={@UniqueConstraint(name="unique_name", columns={"name", "category_id"})})
  */
 class Landing
 {
@@ -31,6 +34,12 @@ class Landing
      * @ORM\Column(type="integer", nullable=true, options={"default": 0, "unsigned":true})
      */
     private $cr;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="landings")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $category;
 
     public function getId(): ?int
     {
@@ -69,6 +78,18 @@ class Landing
     public function setCr(?int $cr): self
     {
         $this->cr = $cr;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
 
         return $this;
     }

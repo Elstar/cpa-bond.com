@@ -6,7 +6,7 @@ oneup_flysystem:
                 location: '%kernel.project_dir%/public/%file_uploads%'
         uploads_offers_adapter:
             local:
-                location: '%kernel.project_dir%/public/offers'
+                location: '%kernel.project_dir%/public/%file_uploads%/offers'
     filesystems:
         uploads_file:
             adapter: uploads_file_adapter

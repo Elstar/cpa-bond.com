@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CategoryRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\UniqueConstraint;
 use Doctrine\ORM\Mapping\Table;
@@ -73,6 +75,28 @@ class Category
      */
     private $children;
 
+    /**
+     * @ORM\OneToMany(targetEntity=PreLanding::class, mappedBy="category")
+     */
+    private $preLandings;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Landing::class, mappedBy="category")
+     */
+    private $landings;
+
+    /**
+     * @ORM\OneToMany(targetEntity=PreLandingPage::class, mappedBy="category")
+     */
+    private $preLandingPages;
+
+    public function __construct()
+    {
+        $this->preLandings = new ArrayCollection();
+        $this->landings = new ArrayCollection();
+        $this->preLandingPages = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -130,6 +154,96 @@ class Category
         $this->lvl = 0;
         $this->lft = 0;
         $this->rgt = 0;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PreLanding[]
+     */
+    public function getPreLandings(): Collection
+    {
+        return $this->preLandings;
+    }
+
+    public function addPreLanding(PreLanding $preLanding): self
+    {
+        if (!$this->preLandings->contains($preLanding)) {
+            $this->preLandings[] = $preLanding;
+            $preLanding->setCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removePreLanding(PreLanding $preLanding): self
+    {
+        if ($this->preLandings->removeElement($preLanding)) {
+            // set the owning side to null (unless already changed)
+            if ($preLanding->getCateg() === $this) {
+                $preLanding->setCateg(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Landing[]
+     */
+    public function getLandings(): Collection
+    {
+        return $this->landings;
+    }
+
+    public function addLanding(Landing $landing): self
+    {
+        if (!$this->landings->contains($landing)) {
+            $this->landings[] = $landing;
+            $landing->setCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLanding(Landing $landing): self
+    {
+        if ($this->landings->removeElement($landing)) {
+            // set the owning side to null (unless already changed)
+            if ($landing->getCategory() === $this) {
+                $landing->setCategory(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PreLandingPage[]
+     */
+    public function getPreLandingPages(): Collection
+    {
+        return $this->preLandingPages;
+    }
+
+    public function addPreLandingPage(PreLandingPage $preLandingPage): self
+    {
+        if (!$this->preLandingPages->contains($preLandingPage)) {
+            $this->preLandingPages[] = $preLandingPage;
+            $preLandingPage->setCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removePreLandingPage(PreLandingPage $preLandingPage): self
+    {
+        if ($this->preLandingPages->removeElement($preLandingPage)) {
+            // set the owning side to null (unless already changed)
+            if ($preLandingPage->getCategory() === $this) {
+                $preLandingPage->setCategory(null);
+            }
+        }
 
         return $this;
     }

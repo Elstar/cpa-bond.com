@@ -1,0 +1,20 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}{% trans %}Offer create{% endtrans %}{% endblock %}
+
+{% block body %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-dark">
+            <li class="breadcrumb-item"><a href="{{ path('app_admin_offer') }}">{% trans %}Offer management{% endtrans %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans %}Create{% endtrans %}</li>
+        </ol>
+    </nav>
+    {{ form_start(offerForm) }}
+        {{ form_widget(offerForm) }}
+        {% if app.request.attributes.get('_route')|route_name_to_array|last == 'create' %}
+            <button type="submit" class="btn btn-primary">{% trans %}Create{% endtrans %}</button>
+        {% else %}
+            <button type="submit" class="btn btn-primary">{% trans %}Edit{% endtrans %}</button>
+        {% endif %}
+    {{ form_end(offerForm) }}
+{% endblock %}

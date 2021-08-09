@@ -4,9 +4,12 @@ namespace App\Entity;
 
 use App\Repository\PreLandingPageRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Table;
+use Doctrine\ORM\Mapping\UniqueConstraint;
 
 /**
  * @ORM\Entity(repositoryClass=PreLandingPageRepository::class)
+ * @Table(name="pre_landing_page", uniqueConstraints={@UniqueConstraint(name="unique_name", columns={"name", "category_id"})})
  */
 class PreLandingPage
 {
@@ -31,6 +34,12 @@ class PreLandingPage
      * @ORM\Column(type="integer", options={"default": 0, "unsigned":true})
      */
     private $cr;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="preLandingPages")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $category;
 
     public function getId(): ?int
     {
@@ -69,6 +78,18 @@ class PreLandingPage
     public function setCr(?int $cr): self
     {
         $this->cr = $cr;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
 
         return $this;
     }

@@ -1,0 +1,22 @@
+<div class="pt-2"></div>
+<h4>{{ platformType }}</h4>
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th class="col-1" scope="col">#</th>
+        <th scope="col">{% trans %}Name{% endtrans %}</th>
+        <th scope="col">{% trans %}Url{% endtrans %}</th>
+        <th class="col-1" scope="col">{% trans %}Actions{% endtrans %}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for platform in platforms %}
+        <tr>
+            <th scope="row">{{ platform.id }}</th>
+            <td>{{ platform.name }}</td>
+            <td><a href="{{ platform.url }}" target="_blank">{{ platform.url }}</a></td>
+            <td><a class="bi-pen" href="{{ path('app_admin_category_edit', {"id": platform.id}) }}"></a></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

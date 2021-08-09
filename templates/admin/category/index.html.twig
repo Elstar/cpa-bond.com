@@ -3,9 +3,12 @@
 {% block title %}{% trans %}Category management{% endtrans %}{% endblock %}
 
 {% block body %}
-    {% include 'admin/partial/category.breadcrumb.html.twig' %}
+    {% include 'admin/partial/category.breadcrumb.html.twig' with {'routeName': 'app_admin_category', 'baseDivName': 'Category management'} %}
     {% if category %}
-        <a href="{{ path('app_admin_category_create', {"id": category.id}) }}" class="btn btn-info">{% trans %}Create{% endtrans %}</a>
+        <a href="{{ path('app_admin_category_create', {"id": category.id}) }}" class="btn btn-info">{% trans %}Create category{% endtrans %}</a>
+        <a href="{{ path('app_admin_category_platform_create', {"id": category.id, "platform": "pre_landing"}) }}" class="btn btn-info">{% trans %}Create{% endtrans %} Pre-Landing</a>
+        <a href="{{ path('app_admin_category_platform_create', {"id": category.id, "platform": "landing"}) }}" class="btn btn-info">{% trans %}Create{% endtrans %} Landing</a>
+        <a href="{{ path('app_admin_category_platform_create', {"id": category.id, "platform": "pre_landing_page"}) }}" class="btn btn-info">{% trans %}Create{% endtrans %} Pre-Landing-Page</a>
     {% else %}
         <a href="{{ path('app_admin_category_create') }}" class="btn btn-info">{% trans %}Create{% endtrans %}</a>
     {% endif %}
@@ -30,5 +33,15 @@
             {% endfor %}
             </tbody>
         </table>
+    {% endif %}
+
+    {% if preLandings %}
+        {% include 'admin/partial/category.platforms.html.twig' with {'platformType': 'Pre-Landings', 'platforms': preLandings} %}
+    {% endif %}
+    {% if landings %}
+        {% include 'admin/partial/category.platforms.html.twig' with {'platformType': 'Landings', 'platforms': landings} %}
+    {% endif %}
+    {% if preLandingPages %}
+        {% include 'admin/partial/category.platforms.html.twig' with {'platformType': 'Pre-Landing-Pages', 'platforms': preLandingPages} %}
     {% endif %}
 {% endblock %}

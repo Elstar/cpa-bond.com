@@ -1,10 +1,13 @@
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark">
         {% if tree and tree|length > 1 %}
+            <li class="breadcrumb-item">
+                <a href="{{ path(routeName) }}">{{ baseDivName }}</a>
+            </li>
             {% for path in tree  %}
                 <li class="breadcrumb-item{% if path.id == category.id and surf %} active{% endif %}">
                     {% if path.id != category.id or not surf %}
-                        <a href="{{ path('app_admin_category', {"id": path.id}) }}">
+                        <a href="{{ path(routeName, {"id": path.id}) }}">
                     {% endif %}
                     {{ path.name }}
                     {% if path.id != category.id or not surf %}
@@ -15,9 +18,9 @@
         {% else %}
             <li class="breadcrumb-item{% if tree == null %} active{% endif %}">
                 {% if tree %}
-                    <a href="{{ path('app_admin_category') }}">
+                    <a href="{{ path(routeName) }}">
                 {% endif %}
-                        {% trans %}Category management{% endtrans %}
+                        {{ baseDivName }}
                 {% if tree %}
                     </a>
                 {% endif %}
@@ -25,7 +28,7 @@
             {% if tree and tree|length == 1 %}
                 <li class="breadcrumb-item{% if surf %} active{% endif %}">
                     {% if not surf %}
-                        <a href="{{ path('app_admin_category', {"id": category.id}) }}">
+                        <a href="{{ path(routeName, {"id": category.id}) }}">
                     {% endif %}
                     {{ category.name }}
                     {% if not surf %}
@@ -34,9 +37,9 @@
                 </li>
             {% endif %}
         {% endif %}
-        {% if app.request.attributes.get('_route') == 'app_admin_category_create' %}
+        {% if app.request.attributes.get('_route')|route_name_to_array|last == 'create' %}
             <li class="breadcrumb-item active" aria-current="page">{% trans %}Create{% endtrans %}</li>
-        {% elseif app.request.attributes.get('_route') == 'app_admin_category_edit' %}
+        {% elseif app.request.attributes.get('_route')|route_name_to_array|last == 'edit' %}
             <li class="breadcrumb-item active" aria-current="page">{% trans %}Edit{% endtrans %}</li>
         {% endif %}
     </ol>

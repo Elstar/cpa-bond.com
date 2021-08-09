@@ -12,6 +12,9 @@ import './styles/app.css';
 
 import './bootstrap';
 import { Tab, Dropdown} from 'bootstrap';
+import 'select2'
 require('bootstrap-icons/font/bootstrap-icons.css');
 require('./js/a2lixSfCollection.js');
 require('./js/bootstrap_file_field')
+require('./js/tiny.js')
+require('./js/select2.js')

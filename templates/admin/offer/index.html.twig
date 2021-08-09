@@ -1,0 +1,29 @@
+{% extends 'admin/base.html.twig' %}
+
+    {% block title %}{% trans %}Offer management{% endtrans %}{% endblock %}
+
+{% block body %}
+    <a href="{{ path('app_admin_offer_create') }}" class="btn btn-info">{% trans %}Create{% endtrans %}</a>
+
+    {% if offers %}
+        <div class="pt-2"></div>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th class="col-1" scope="col">#</th>
+                <th scope="col">{% trans %}Name{% endtrans %}</th>
+                <th class="col-1" scope="col">{% trans %}Actions{% endtrans %}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for offer in offers %}
+                <tr>
+                    <th scope="row">{{ offer.id }}</th>
+                    <td><a href="{{ path('app_admin_offer_edit', {"id": offer.id}) }}">{{ offer.name }}</a></td>
+                    <td><a class="bi-pen" href="{{ path('app_admin_offer_edit', {"id": offer.id}) }}"></a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}

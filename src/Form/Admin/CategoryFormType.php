@@ -41,7 +41,10 @@ class CategoryFormType extends AbstractType
         if (!empty($category) && $category->getId()) {
             $builder->add('locale', LocalesType::class, [
                 'label' => 'Language',
-                'data' => $category->getLocale()
+                'data' => $category->getLocale(),
+                'attr' => [
+                    'class' => 'bg-dark'
+                ],
             ]);
         }
     }
