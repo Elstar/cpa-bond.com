@@ -2,39 +2,39 @@
     <div class="position-sticky pt-3">
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">
+                <a
+                        class="{{ app.request.attributes.get('_route') == 'app_webmaster_dashboard' ? 'nav-link active link-dark' : 'nav-link' }}"
+                        {% if app.request.attributes.get('_route') == 'app_webmaster_dashboard' %}
+                            aria-current="page"
+                        {% endif %}
+                        href="{{ path('app_webmaster_dashboard') }}"
+                >
                     <i class="bi-building"></i>
-                    Dashboard
+                    {% trans %}Dashboard{% endtrans %}
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <span data-feather="file"></span>
-                    Orders
+                <a
+                        class="{{ app.request.attributes.get('_route') == 'app_webmaster_offer' ? 'nav-link active link-dark' : 'nav-link' }}"
+                        {% if app.request.attributes.get('_route') == 'app_webmaster_offer' %}
+                            aria-current="page"
+                        {% endif %}
+                        href="{{ path('app_webmaster_offer') }}"
+                >
+                    <i class="bi-building"></i>
+                    {% trans %}Offers{% endtrans %}
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <span data-feather="shopping-cart"></span>
-                    Products
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <span data-feather="users"></span>
-                    Customers
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <span data-feather="bar-chart-2"></span>
-                    Reports
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <span data-feather="layers"></span>
-                    Integrations
+                <a
+                        class="{{ app.request.attributes.get('_route') == 'app_webmaster_stream' ? 'nav-link active link-dark' : 'nav-link' }}"
+                        {% if app.request.attributes.get('_route') == 'app_webmaster_stream' %}
+                            aria-current="page"
+                        {% endif %}
+                        href="{{ path('app_webmaster_stream') }}"
+                >
+                    <i class="bi-building"></i>
+                    {% trans %}Stream{% endtrans %}
                 </a>
             </li>
         </ul>

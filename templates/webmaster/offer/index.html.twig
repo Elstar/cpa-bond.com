@@ -1,0 +1,89 @@
+{% extends 'webmaster/base.html.twig' %}
+
+{% block title %}CPA Bond {% trans %}Offer{% endtrans %}{% endblock %}
+
+{% block body %}
+    <form method="get" class="form-inline">
+        <div class="col-2 form-group">
+            <label class="sr-only required" placeholder="Offer name" for="offer_filter_form_name">Name</label>
+            <input
+                    type="text"
+                    id="offer_filter_form_name"
+                    name="name"
+                    class="w-100 form-control"
+                    placeholder="{% trans %}search in offer name{% endtrans %}"
+                    value="{{ app.request.query.get('name') }}"
+            >
+        </div>
+        <div class="col-3 form-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text" for="offer_filter_form_geo">Geo</span>
+            </div>
+            <select id="offer_filter_form_geo" name="geo[]" class="js-example-basic-multiple bg-dark w-75 form-control" multiple="" autocomplete="off" placeholder="{% trans %}geo{% endtrans %}">
+                {% for geo in geos %}
+                    <option value="{{ geo.id }}"{% if geo.id in app.request.query.get('geo') %} selected{% endif %}>
+                        {{ geo.country }} ({{ geo.name }})
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-2 form-group">
+            <label class="sr-only required" for="offer_filter_form_category">Category</label>
+            <select name="category" class="js-example-basic-single bg-dark w-100 form-control-lg form-control" autocomplete="off">
+                <option value="0">{% trans %}Choose category{% endtrans %}</option>
+                {% for category in categories %}
+                    <option value="{{ category.id }}"{% if category.id == app.request.query.get('category') %} selected{% endif %}>{{ category.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">{% trans %}Find{% endtrans %}</button>
+    </form>
+    <div class="p-2"></div>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>{% trans %}Offer{% endtrans %}</th>
+            <th>{% trans %}Category{% endtrans %}</th>
+            <th>{% trans %}Country{% endtrans %}</th>
+            <th>{% trans %}Payment{% endtrans %}</th>
+            <th>{% trans %}Actions{% endtrans %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for offer in pagination %}
+            <tr>
+                <td>
+                    {% if offer.imageFilename %}
+                        <a href="{{ path('app_webmaster_offer_view', {id : offer.id}) }}">
+                            <img class="mr-2 align-left float-start" src="{{ offer.imageFilename | imagine_filter('offer_thumb') }}">
+                        </a>
+                    {% endif %}
+                    <h2>
+                        <a href="{{ path('app_webmaster_offer_view', {id : offer.id}) }}">
+                            {{ offer.name }}
+                        </a>
+                    </h2>
+                </td>
+                <td>{{ offer.category.name }}</td>
+                <td>
+                    {% for geo in offer.geo %}
+                        <div>
+                            {% if geo.imageFilename %}
+                                <img src="{{ geo.imageFilename | imagine_filter('flag') }}">
+                            {% endif %}
+                            {{ geo.country }}
+                        </div>
+                    {% endfor %}
+                </td>
+                <td>{{ offer.paySum }} {{ offer.currency.sign }}</td>
+                <td><a href="{{ path('app_webmaster_stream_create', {id: offer.id}) }}" class="btn btn-info">{% trans %}Create stream{% endtrans %}</a></td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">{% trans %}Offers not found{% endtrans %}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {{ knp_pagination_render(pagination) }}
+{% endblock %}

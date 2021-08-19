@@ -8,4 +8,5 @@ $(function () {
       $container.find('.custom-file-label').html(event.currentTarget.files[0].name);
     });
   });
+  $('[data-toggle="tooltip"]').tooltip();
 });

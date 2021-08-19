@@ -47,6 +47,7 @@ class OfferController extends AbstractController
 
         if ($this->handleFormRequest($offerForm, $em, $request, $offerFileSystem)) {
             $this->addFlash('flash_message', 'Offer added successfully');
+            return $this->redirectToRoute('app_webmaster_stream');
         }
 
         return $this->render('admin/offer/create.html.twig', [

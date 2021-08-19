@@ -9,6 +9,8 @@ parameters:
     file_uploads: 'uploads'
     file_uploads_url: '%env(SITE_URL)%/%file_uploads%'
     file_uploads_dir: '%kernel.project_dir%/public/%file_uploads%'
+    count_offers_in_page: 5
+    count_streams_in_page: 5
 services:
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.

@@ -78,7 +78,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $skype;
 
     /**
-     * @ORM\OneToMany(targetEntity=Stream::class, mappedBy="User", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Stream::class, mappedBy="user", orphanRemoval=true)
      */
     private $streams;
 

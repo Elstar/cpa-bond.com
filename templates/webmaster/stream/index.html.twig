@@ -1,0 +1,41 @@
+{% extends 'webmaster/base.html.twig' %}
+
+{% block title %}{% trans %}Streams{% endtrans %}{% endblock %}
+
+{% block body %}
+    {% if pagination %}
+        <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>{% trans %}Id{% endtrans %}</th>
+            <th>{% trans %}Name{% endtrans %}</th>
+            <th>{% trans %}Create Date{% endtrans %}</th>
+            <th>{% trans %}Url{% endtrans %}</th>
+            <th>{% trans %}Geo{% endtrans %}</th>
+            <th>{% trans %}Actions{% endtrans %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for stream in pagination %}
+            <tr>
+                <td>{{ stream.id }}</td>
+                <td>{{ stream.name }}</td>
+                <td>{{ stream.createdAt | date("d.m.Y H:i") }}</td>
+                <td>
+                    <div class="form-group">
+                        <input class="form-control" type="text" value="{{ stream.url }}">
+                    </div>
+                </td>
+                <td>
+                    <img src="{{ stream.geo.imageFilename | imagine_filter('flag') }}"> {{ stream.geo.country }}
+                </td>
+                <td>
+                    <a href="#" class="bi-pen"></a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+        {{ knp_pagination_render(pagination) }}
+    {% endif %}
+{% endblock %}

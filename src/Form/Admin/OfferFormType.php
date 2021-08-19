@@ -79,7 +79,7 @@ class OfferFormType extends AbstractType
             ->add('category', EntityType::class, [
                 'class' => Category::class,
                 'choice_label' => function (Category $category) {
-                    return sprintf('%s', str_repeat("▬", $category->getLvl()) . $category->getName());
+                    return sprintf('%s %s', str_repeat("▬", $category->getLvl()), $category->getName());
                 },
                 'choices' => $this->categoryRepository->getTree(),
                 'attr' => [
@@ -126,6 +126,7 @@ class OfferFormType extends AbstractType
                 ]
             ])
             ->add('preLanding', EntityType::class, [
+                'required' => false,
                 'class' => PreLanding::class,
                 'choice_label' => function (PreLanding $preLanding) {
                     return sprintf('%s', $preLanding->getName());
@@ -140,6 +141,7 @@ class OfferFormType extends AbstractType
                 ]
             ])
             ->add('landing', EntityType::class, [
+                'required' => false,
                 'class' => Landing::class,
                 'choice_label' => function (Landing $landing) {
                     return sprintf('%s', $landing->getName());
@@ -154,6 +156,7 @@ class OfferFormType extends AbstractType
                 ]
             ])
             ->add('preLandingPage', EntityType::class, [
+                'required' => false,
                 'class' => PreLandingPage::class,
                 'choice_label' => function (PreLandingPage $preLandingPage) {
                     return sprintf('%s', $preLandingPage->getName());

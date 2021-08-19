@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Stream;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -19,32 +20,10 @@ class StreamRepository extends ServiceEntityRepository
         parent::__construct($registry, Stream::class);
     }
 
-    // /**
-    //  * @return Stream[] Returns an array of Stream objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
+    public function findStreamsByUserQuery(User $user) {
         return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('s.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
+            ->andWhere('s.user = :user')
+            ->setParameter('user', $user->getId())
         ;
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Stream
-    {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

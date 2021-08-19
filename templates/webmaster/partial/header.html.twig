@@ -1,21 +1,42 @@
 <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
     <div class="container-fluid">
-        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">CPA Bond</a>
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="{{ path('app_webmaster_dashboard') }}">CPA Bond</a>
         <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="dropdown justify-content-end px-sm-5">
-            <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
-                <strong>{{ app.user.firstName }}</strong>
+        <div class="w-100"></div>
+        <div class="dropdown">
+            <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="dropdownLanguage" data-toggle="dropdown" aria-expanded="false">
+                <img
+                        {% if app.request.locale == 'uk' %}
+                            src="{{ asset('images/flags/ukraine-flag-png-small.jpg') }}"
+                        {% elseif app.request.locale == 'ru' %}
+                            src="{{ asset('images/flags/russia-flag-png-small.jpg') }}"
+                        {% elseif app.request.locale == 'en' %}
+                            src="{{ asset('images/flags/united-states-of-america-flag-png-small.jpg') }}"
+                        {% endif %}
+                        alt="" width="32" height="32" class="rounded-circle me-2">
             </a>
-            <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-                <li><a class="dropdown-item" href="#">New project...</a></li>
-                <li><a class="dropdown-item" href="#">Settings</a></li>
-                <li><a class="dropdown-item" href="#">Profile</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="#">Sign out</a></li>
+            <ul class="dropdown-menu dropdown-menu-dark text-small shadow w-25" aria-labelledby="dropdownLanguage">
+                <li><a class="dropdown-item" href="{{ path('app_webmaster_dashboard.uk') }}"><img src="{{ asset('images/flags/ukraine-flag-png-small.jpg') }}"></a></li>
+                <li><a class="dropdown-item" href="{{ path('app_webmaster_dashboard.ru') }}"><img src="{{ asset('images/flags/russia-flag-png-small.jpg') }}"></a></li>
+                <li><a class="dropdown-item" href="{{ path('app_webmaster_dashboard.en') }}"><img src="{{ asset('images/flags/united-states-of-america-flag-png-small.jpg') }}"></a></li>
             </ul>
+        </div>
+        <div class="col-lg-1">
+            <div class="dropdown justify-content-end px-sm-5">
+                <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="dropdownUser1" data-toggle="dropdown" aria-expanded="false">
+                    <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
+                    <strong>{{ app.user.firstName }}</strong>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                    <li><a class="dropdown-item" href="#">New project...</a></li>
+                    <li><a class="dropdown-item" href="#">Settings</a></li>
+                    <li><a class="dropdown-item" href="#">Profile</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{{ path('app_logout') }}">{% trans %}Sign out{% endtrans %}</a></li>
+                </ul>
+            </div>
         </div>
     </div>
 </header>

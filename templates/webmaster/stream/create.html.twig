@@ -1,0 +1,12 @@
+{% extends 'webmaster/base.html.twig' %}
+
+{% block title %}{% trans %}Create stream{% endtrans %}{% endblock %}
+
+{% block body %}
+    <h2>{% trans %}Create stream{% endtrans %}</h2>
+    <hr>
+    {{ form_start(streamForm) }}
+        {{ form_widget(streamForm) }}
+        <button type="submit" class="btn btn-primary mb-2">{% trans %}Create{% endtrans %}</button>
+    {{ form_end(streamForm) }}
+{% endblock %}

@@ -4,14 +4,18 @@ namespace App\Entity;
 
 use App\Repository\StreamRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Table;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Doctrine\ORM\Mapping\UniqueConstraint;
 
 /**
  * @ORM\Entity(repositoryClass=StreamRepository::class)
+ * @Table(name="stream", uniqueConstraints={@UniqueConstraint(name="unique_id", columns={"unique_id"})})
  */
 class Stream
 {
     use TimestampableEntity;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -23,7 +27,7 @@ class Stream
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="streams")
      * @ORM\JoinColumn(nullable=false)
      */
-    private ?User $User;
+    private ?User $user;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -34,34 +38,34 @@ class Stream
      * @ORM\ManyToOne(targetEntity=Offer::class)
      * @ORM\JoinColumn(nullable=false)
      */
-    private ?Offer $Offer;
+    private ?Offer $offer;
 
     /**
      * @ORM\ManyToOne(targetEntity=PreLanding::class)
      */
-    private ?PreLanding $PreLanding;
+    private ?PreLanding $preLanding;
 
     /**
      * @ORM\ManyToOne(targetEntity=Landing::class)
      */
-    private ?Landing $Landing;
+    private ?Landing $landing;
 
     /**
      * @ORM\ManyToOne(targetEntity=PreLandingPage::class)
      */
-    private ?PreLandingPage $PreLandingPage;
+    private ?PreLandingPage $preLandingPage;
 
     /**
      * @ORM\ManyToOne(targetEntity=Geo::class)
      * @ORM\JoinColumn(nullable=false)
      */
-    private ?Geo $Geo;
+    private ?Geo $geo;
 
     /**
      * @ORM\ManyToOne(targetEntity=PayTypes::class)
      * @ORM\JoinColumn(nullable=false)
      */
-    private ?PayTypes $PayType;
+    private ?PayTypes $payType;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -73,6 +77,53 @@ class Stream
      */
     private ?string $uniqueId;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private ?int $sourceTraffic;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private ?string $postbackCreate;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private ?string $postbackApprove;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private ?string $postbackDecline;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private ?string $postbackTrash;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private ?int $googleTagId;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private ?string $googleTagConversionId;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private ?int $sum;
+
+
+    public function __construct()
+    {
+        $this->uniqueId = uniqid();
+    }
+
+
     public function getId(): ?int
     {
         return $this->id;
@@ -80,12 +131,12 @@ class Stream
 
     public function getUser(): ?User
     {
-        return $this->User;
+        return $this->user;
     }
 
-    public function setUser(?User $User): self
+    public function setUser(?User $user): self
     {
-        $this->User = $User;
+        $this->user = $user;
 
         return $this;
     }
@@ -104,72 +155,72 @@ class Stream
 
     public function getOffer(): ?Offer
     {
-        return $this->Offer;
+        return $this->offer;
     }
 
-    public function setOffer(?Offer $Offer): self
+    public function setOffer(?Offer $offer): self
     {
-        $this->Offer = $Offer;
+        $this->offer = $offer;
 
         return $this;
     }
 
     public function getPreLanding(): ?PreLanding
     {
-        return $this->PreLanding;
+        return $this->preLanding;
     }
 
-    public function setPreLanding(?PreLanding $PreLanding): self
+    public function setPreLanding(?PreLanding $preLanding): self
     {
-        $this->PreLanding = $PreLanding;
+        $this->preLanding = $preLanding;
 
         return $this;
     }
 
     public function getLanding(): ?Landing
     {
-        return $this->Landing;
+        return $this->landing;
     }
 
-    public function setLanding(?Landing $Landing): self
+    public function setLanding(?Landing $landing): self
     {
-        $this->Landing = $Landing;
+        $this->landing = $landing;
 
         return $this;
     }
 
     public function getPreLandingPage(): ?PreLandingPage
     {
-        return $this->PreLandingPage;
+        return $this->preLandingPage;
     }
 
-    public function setPreLandingPage(?PreLandingPage $PreLandingPage): self
+    public function setPreLandingPage(?PreLandingPage $preLandingPage): self
     {
-        $this->PreLandingPage = $PreLandingPage;
+        $this->preLandingPage = $preLandingPage;
 
         return $this;
     }
 
     public function getGeo(): ?Geo
     {
-        return $this->Geo;
+        return $this->geo;
     }
 
-    public function setGeo(?Geo $Geo): self
+    public function setGeo(?Geo $geo): self
     {
-        $this->Geo = $Geo;
+        $this->geo = $geo;
 
         return $this;
     }
 
     public function getPayType(): ?PayTypes
     {
-        return $this->PayType;
+        return $this->payType;
     }
 
-    public function setPayType(?PayTypes $PayType): self
+    public function setPayType(?PayTypes $payType): self
     {
-        $this->PayType = $PayType;
+        $this->payType = $payType;
 
         return $this;
     }
@@ -179,8 +230,17 @@ class Stream
         return $this->url;
     }
 
-    public function setUrl(string $url): self
+    public function setUrl(): self
     {
+        $url = null;
+
+        if (isset($this->preLanding) && $url = $this->getPreLanding()->getUrl())
+            $url = $url . '?stream=' . $this->getUniqueId();
+        elseif (isset($this->preLandingPage) && $url = $this->getPreLandingPage()->getUrl())
+            $url = $url . '?stream=' . $this->getUniqueId();
+        elseif (isset($this->landing) && $url = $this->getLanding()->getUrl())
+            $url = $url . '?stream=' . $this->getUniqueId();
+
         $this->url = $url;
 
         return $this;
@@ -191,9 +251,98 @@ class Stream
         return $this->uniqueId;
     }
 
-    public function setUniqueId(string $uniqueId): self
+    public function getSourceTraffic(): ?int
     {
-        $this->uniqueId = $uniqueId;
+        return $this->sourceTraffic;
+    }
+
+    public function setSourceTraffic(int $sourceTraffic): self
+    {
+        $this->sourceTraffic = $sourceTraffic;
+
+        return $this;
+    }
+
+    public function getPostbackCreate(): ?string
+    {
+        return $this->postbackCreate;
+    }
+
+    public function setPostbackCreate(?string $postbackCreate): self
+    {
+        $this->postbackCreate = $postbackCreate;
+
+        return $this;
+    }
+
+    public function getPostbackApprove(): ?string
+    {
+        return $this->postbackApprove;
+    }
+
+    public function setPostbackApprove(?string $postbackApprove): self
+    {
+        $this->postbackApprove = $postbackApprove;
+
+        return $this;
+    }
+
+    public function getPostbackDecline(): ?string
+    {
+        return $this->postbackDecline;
+    }
+
+    public function setPostbackDecline(?string $postbackDecline): self
+    {
+        $this->postbackDecline = $postbackDecline;
+
+        return $this;
+    }
+
+    public function getPostbackTrash(): ?string
+    {
+        return $this->postbackTrash;
+    }
+
+    public function setPostbackTrash(?string $postbackTrash): self
+    {
+        $this->postbackTrash = $postbackTrash;
+
+        return $this;
+    }
+
+    public function getGoogleTagId(): ?int
+    {
+        return $this->googleTagId;
+    }
+
+    public function setGoogleTagId(?int $googleTagId): self
+    {
+        $this->googleTagId = $googleTagId;
+
+        return $this;
+    }
+
+    public function getGoogleTagConversionId(): ?string
+    {
+        return $this->googleTagConversionId;
+    }
+
+    public function setGoogleTagConversionId(?string $googleTagConversionId): self
+    {
+        $this->googleTagConversionId = $googleTagConversionId;
+
+        return $this;
+    }
+
+    public function getSum(): ?int
+    {
+        return $this->sum;
+    }
+
+    public function setSum(int $sum): self
+    {
+        $this->sum = $sum;
 
         return $this;
     }

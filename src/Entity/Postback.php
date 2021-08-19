@@ -32,17 +32,17 @@ class Postback
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $leadConfirm;
+    private $leadApprove;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $leadReject;
+    private $leadDecline;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $leadFake;
+    private $leadTrash;
 
     public function getId(): ?int
     {
@@ -73,38 +73,38 @@ class Postback
         return $this;
     }
 
-    public function getLeadConfirm(): ?string
+    public function getLeadApprove(): ?string
     {
-        return $this->leadConfirm;
+        return $this->leadApprove;
     }
 
-    public function setLeadConfirm(?string $leadConfirm): self
+    public function setLeadApprove(?string $leadApprove): self
     {
-        $this->leadConfirm = $leadConfirm;
+        $this->leadApprove = $leadApprove;
 
         return $this;
     }
 
-    public function getLeadReject(): ?string
+    public function getLeadDecline(): ?string
     {
-        return $this->leadReject;
+        return $this->leadDecline;
     }
 
-    public function setLeadReject(?string $leadReject): self
+    public function setLeadDecline(?string $leadDecline): self
     {
-        $this->leadReject = $leadReject;
+        $this->leadDecline = $leadDecline;
 
         return $this;
     }
 
-    public function getLeadFake(): ?string
+    public function getLeadTrash(): ?string
     {
-        return $this->leadFake;
+        return $this->leadTrash;
     }
 
-    public function setLeadFake(?string $leadFake): self
+    public function setLeadTrash(?string $leadTrash): self
     {
-        $this->leadFake = $leadFake;
+        $this->leadTrash = $leadTrash;
 
         return $this;
     }

@@ -1,0 +1,7 @@
+{% if app.session.flashBag.peek('flash_message')|length > 0 %}
+    <div class="alert alert-success" role="alert">
+        {% for message in app.flashes('flash_message') %}
+            <div>{{ message }}</div>
+        {% endfor %}
+    </div>
+{% endif %}
