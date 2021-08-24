@@ -65,7 +65,7 @@
         </div>
     </div>
     <div class="row">
-        {% if offer.preLanding %}
+        {% if offer.preLanding|length > 0 %}
             <div class="row pt-2">
                 <h4>{% trans %}Pre-Landings{% endtrans %}</h4>
                 {% for preLanding in offer.preLanding %}
@@ -87,7 +87,7 @@
                 {% endfor %}
             </div>
         {% endif %}
-        {% if offer.landing %}
+        {% if offer.landing|length > 0 %}
             <div class="row pt-2">
                 <h4>{% trans %}Landings{% endtrans %}</h4>
                 {% for landing in offer.landing %}
@@ -109,9 +109,9 @@
                 {% endfor %}
             </div>
         {% endif %}
-        {% if offer.preLandingPage %}
+        {% if offer.preLandingPage|length > 0 %}
             <div class="row pt-2">
-                <h4>{% trans %}Landings{% endtrans %}</h4>
+                <h4>{% trans %}PreLandingPage{% endtrans %}</h4>
                 {% for preLandingPage in offer.preLandingPage %}
                     <div class="col col-5 border p-3 m-2">
                         <div class="row">

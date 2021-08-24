@@ -105,7 +105,7 @@ class Stream
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private ?int $googleTagId;
+    private ?string $googleTagId;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -311,12 +311,12 @@ class Stream
         return $this;
     }
 
-    public function getGoogleTagId(): ?int
+    public function getGoogleTagId(): ?string
     {
         return $this->googleTagId;
     }
 
-    public function setGoogleTagId(?int $googleTagId): self
+    public function setGoogleTagId(?string $googleTagId): self
     {
         $this->googleTagId = $googleTagId;
 

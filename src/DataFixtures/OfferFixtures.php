@@ -42,21 +42,25 @@ class OfferFixtures extends BaseFixtures implements DependentFixtureInterface
                 ->setCurrency($this->getRandomReference(Currency::class))
                 ->setTranslatableLocale('uk')
             ;
-            $offer->addPayType($this->getRandomReference(PayTypes::class));
+            $offer->setPayType($this->getRandomReference(PayTypes::class));
             $offer->addGeo($this->getRandomReference(Geo::class));
             if ($this->faker->boolean) {
                 $preLanding = $this->preLandingRepository->findOneBy(['category' => $category]);
-                $offer->addPreLanding($preLanding);
+                if ($preLanding)
+                    $offer->addPreLanding($preLanding);
 
                 $landing = $this->landingRepository->findOneBy(['category' => $category]);
-                $offer->addLanding($landing);
+                if ($landing)
+                    $offer->addLanding($landing);
             } else {
                 if ($this->faker->boolean) {
                     $preLandingPage = $this->preLandingPageRepository->findOneBy(['category' => $category]);
-                    $offer->addPreLanding($preLandingPage);
+                    if ($preLandingPage)
+                        $offer->addPreLandingPage($preLandingPage);
                 } else {
                     $landing = $this->landingRepository->findOneBy(['category' => $category]);
-                    $offer->addLanding($landing);
+                    if ($landing)
+                        $offer->addLanding($landing);
                 }
             }
         });

@@ -17,9 +17,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @IsGranted("ROLE_USER")
- */
 
 class LeadController extends AbstractController
 {
@@ -32,12 +29,14 @@ class LeadController extends AbstractController
      */
     public function __construct(LeadRepository $leadRepository)
     {
-        $this->geoIp = new Reader($_SERVER['PWD'] . '/src/geoIp/GeoIP2-Country.mmdb');
+
+        $this->geoIp = new Reader(__DIR__ . '/../../geoIp/GeoIP2-Country.mmdb');
         $this->leadRepository = $leadRepository;
     }
 
     /**
      * @Route("/api/v1/new-lead", name="api_order")
+     * @IsGranted("ROLE_USER")
      */
     public function create(Request $request, StreamRepository $streamRepository, EntityManagerInterface $em): Response
     {
@@ -76,7 +75,7 @@ class LeadController extends AbstractController
                 /**
                  * @var Stream $stream;
                  */
-                $stream = $streamRepository->findOneBy(['id' => $data['stream_id']]);
+                $stream = $streamRepository->findOneBy(['uniqueId' => $data['stream_id']]);
 
                 if (empty($stream) || $stream->getUser()->getId() != $user->getId()) {
                     $dataError = [
@@ -85,7 +84,7 @@ class LeadController extends AbstractController
                 }
                 if (
                     empty($data['geo'])
-                    || $stream->getGeo()->getName() != $data['geo']
+                    || ($stream && $stream->getGeo()->getName() != $data['geo'])
                     //|| $this->geoIp->country($ip->getDotAddress())->country->isoCode != $stream->getGeo()->getName()
                 ) {
                     $dataError = [
@@ -97,16 +96,18 @@ class LeadController extends AbstractController
                         'message' => 'Phone is empty'
                     ];
                 }
-                $hash = md5($stream->getOffer()->getId() . '-' . $data['phone']);
-                if ($this->leadRepository->getLastLeadsFromOneIpCount($ip, $stream) > 2) {
-                    $dataError = [
-                        'message' => 'To much orders from one IP'
-                    ];
-                }
-                if ($this->leadRepository->getLasLeadsByOfferAndPhoneCount($hash) > 0) {
-                    $dataError = [
-                        'message' => 'Duplicated lead in system'
-                    ];
+                if ($stream) {
+                    $hash = md5($stream->getOffer()->getId() . '-' . $data['phone']);
+                    if ($this->leadRepository->getLastLeadsFromOneIpCount($ip, $stream) > 2) {
+                        $dataError = [
+                            'message' => 'To much orders from one IP'
+                        ];
+                    }
+                    if ($this->leadRepository->getLasLeadsByOfferAndPhoneCount($hash) > 0) {
+                        $dataError = [
+                            'message' => 'Duplicated lead in system'
+                        ];
+                    }
                 }
                 if (empty($dataError)) {
                     $lead = new Lead();

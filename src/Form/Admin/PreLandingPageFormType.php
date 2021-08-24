@@ -34,17 +34,6 @@ class PreLandingPageFormType extends AbstractType
                 'mapped' => false,
                 'data' => $platform->getCategory()->getId()
             ])
-            /*->add('category', EntityType::class, [
-                'class' => Category::class,
-                'choice_label' => function (Category $category) {
-                    return sprintf('%s', str_repeat("▬", $category->getLvl()) . $category->getName());
-                },
-                'choices' => $this->categoryRepository->getTree(),
-                'attr' => [
-                    'readonly' => 'disabled',
-                    'class' => 'bg-dark'
-                ]
-            ])*/
         ;
     }
 

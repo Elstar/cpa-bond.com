@@ -53,14 +53,15 @@ class Offer
     private $category;
 
     /**
-     * @ORM\ManyToMany(targetEntity=PayTypes::class)
+     * @ORM\ManyToOne(targetEntity=PayTypes::class)
+     * @ORM\JoinColumn(nullable=false)
      */
     private $payType;
 
     /**
      * @ORM\ManyToMany(targetEntity=Geo::class)
      */
-    private $Geo;
+    private $geo;
 
     /**
      * @ORM\Column(type="float", options={"default": 0, "unsigned":true})
@@ -71,7 +72,7 @@ class Offer
      * @ORM\ManyToOne(targetEntity=Currency::class)
      * @ORM\JoinColumn(nullable=false)
      */
-    private $Currency;
+    private $currency;
 
     /**
      * @Gedmo\Locale
@@ -100,7 +101,6 @@ class Offer
 
     public function __construct()
     {
-        $this->payType = new ArrayCollection();
         $this->Geo = new ArrayCollection();
         $this->preLanding = new ArrayCollection();
         $this->landing = new ArrayCollection();
@@ -187,26 +187,14 @@ class Offer
         return $this;
     }
 
-    /**
-     * @return Collection|PayTypes[]
-     */
-    public function getPayType(): Collection
+    public function getPayType(): ?PayTypes
     {
         return $this->payType;
     }
 
-    public function addPayType(PayTypes $payType): self
+    public function setPayType(PayTypes $payType): self
     {
-        if (!$this->payType->contains($payType)) {
-            $this->payType[] = $payType;
-        }
-
-        return $this;
-    }
-
-    public function removePayType(PayTypes $payType): self
-    {
-        $this->payType->removeElement($payType);
+        $this->payType = $payType;
 
         return $this;
     }
@@ -214,9 +202,9 @@ class Offer
     /**
      * @return Collection|Geo[]
      */
-    public function getGeo(): Collection
+    public function getGeo(): ?Collection
     {
-        return $this->Geo;
+        return $this->geo;
     }
 
     public function addGeo(Geo $geo): self
@@ -249,12 +237,12 @@ class Offer
 
     public function getCurrency(): ?Currency
     {
-        return $this->Currency;
+        return $this->currency;
     }
 
-    public function setCurrency(?Currency $Currency): self
+    public function setCurrency(?Currency $currency): self
     {
-        $this->Currency = $Currency;
+        $this->currency = $currency;
 
         return $this;
     }

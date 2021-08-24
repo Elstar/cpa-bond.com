@@ -1,6 +1,7 @@
 .idea
 public/.htaccess
 *.htaccess
+*.sql
 config.php
 ###> symfony/framework-bundle ###
 /.env.local

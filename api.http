@@ -1,10 +1,11 @@
-POST http://127.0.0.1:8000/api/v1/new-lead
+#POST http://127.0.0.1:8000/api/v1/new-lead
+POST https://cpa-bond.com/api/v1/new-lead
 Content-Type: application/json
 Accept: application/json
-Authorization: Bearer d025e4d6462b991ccc2448d9116ddfd6
+Authorization: Bearer a66a3730add6f9c22f347abdfd87f006
 
 {
-  "stream_id": 2,
+  "stream_id": "612399e8e21b0",
   "name": "Сергей",
   "phone": "0978530430",
   "geo": "UA",

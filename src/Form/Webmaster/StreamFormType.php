@@ -47,42 +47,6 @@ class StreamFormType extends AbstractType
             ->add('postbackTrash')
             ->add('googleTagId')
             ->add('googleTagConversionId')
-            ->add('preLanding', EntityType::class, [
-                'required' => false,
-                'class' => PreLanding::class,
-                'choice_label' => function(PreLanding $preLanding) {
-                    return sprintf('%s (cr 1:%s) %s', $preLanding->getName(), $preLanding->getCr(), $preLanding->getUrl());
-                },
-                'choices' => $stream->getOffer()->getPreLanding(),
-                'expanded' => true,
-                'label_attr' => [
-                    'class' => 'text-white'
-                ]
-            ])
-            ->add('landing', EntityType::class, [
-                'required' => false,
-                'class' => Landing::class,
-                'choice_label' => function(Landing $landing) {
-                    return sprintf('%s (cr 1:%s) %s', $landing->getName(), $landing->getCr(), $landing->getUrl());
-                },
-                'choices' => $stream->getOffer()->getLanding(),
-                'expanded' => true,
-                'label_attr' => [
-                    'class' => 'text-white'
-                ]
-            ])
-            ->add('preLandingPage', EntityType::class, [
-                'required' => false,
-                'class' => PreLandingPage::class,
-                'choice_label' => function(PreLandingPage $preLandingPage) {
-                    return sprintf('%s (cr 1:%s) %s', $preLandingPage->getName(), $preLandingPage->getCr(), $preLandingPage->getUrl());
-                },
-                'choices' => $stream->getOffer()->getPreLandingPage(),
-                'expanded' => true,
-                'label_attr' => [
-                    'class' => 'text-white'
-                ]
-            ])
             ->add('geo', EntityType::class, [
                 'class' => Geo::class,
                 'choice_label' => function (Geo $geo) {
@@ -104,6 +68,51 @@ class StreamFormType extends AbstractType
                 ]
             ])
         ;
+        $preLandings = $stream->getOffer()->getPreLanding();
+        if ($preLandings->count()) {
+            $builder->add('preLanding', EntityType::class, [
+                'required' => false,
+                'class' => PreLanding::class,
+                'choice_label' => function(PreLanding $preLanding) {
+                    return sprintf('%s (cr 1:%s) %s', $preLanding->getName(), $preLanding->getCr(), $preLanding->getUrl());
+                },
+                'choices' => $preLandings,
+                'expanded' => true,
+                'label_attr' => [
+                    'class' => 'text-white'
+                ]
+            ]);
+        }
+        $landings = $stream->getOffer()->getLanding();
+        if ($landings->count()) {
+            $builder->add('landing', EntityType::class, [
+                'required' => false,
+                'class' => Landing::class,
+                'choice_label' => function(Landing $landing) {
+                    return sprintf('%s (cr 1:%s) %s', $landing->getName(), $landing->getCr(), $landing->getUrl());
+                },
+                'choices' => $landings,
+                'expanded' => true,
+                'label_attr' => [
+                    'class' => 'text-white'
+                ]
+            ]);
+        }
+        $preLandingPages = $stream->getOffer()->getPreLandingPage();
+        if ($preLandingPages->count()) {
+            $builder->add('preLandingPage', EntityType::class, [
+                'required' => false,
+                'class' => PreLandingPage::class,
+                'choice_label' => function(PreLandingPage $preLandingPage) {
+                    return sprintf('%s (cr 1:%s) %s', $preLandingPage->getName(), $preLandingPage->getCr(), $preLandingPage->getUrl());
+                },
+                'choices' => $preLandingPages,
+                'expanded' => true,
+                'label_attr' => [
+                    'class' => 'text-white'
+                ]
+            ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver)

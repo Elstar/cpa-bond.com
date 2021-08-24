@@ -22,7 +22,6 @@ class StreamFixtures extends BaseFixtures implements DependentFixtureInterface
              */
             $offer = $this->getRandomReference(Offer::class);
             $stream
-                ->setUniqueId(uniqid())
                 ->setUser($this->getRandomReference(User::class))
                 ->setName($this->faker->name)
                 ->setOffer($offer)
@@ -31,6 +30,7 @@ class StreamFixtures extends BaseFixtures implements DependentFixtureInterface
                 ->setPayType($this->getRandomReference(PayTypes::class))
                 ->setUrl($this->faker->url)
                 ->setSum($offer->getPaySum())
+                ->setSourceTraffic($this->faker->numberBetween(0,5))
             ;
             if ($this->faker->boolean)
                 $stream->setPreLanding($this->getRandomReference(PreLanding::class));

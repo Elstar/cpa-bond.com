@@ -117,7 +117,7 @@ class OfferFormType extends AbstractType
                     return sprintf('%s', $payTypes->getName());
                 },
                 'choices' => $this->payTypesRepository->findAll(),
-                'multiple' => true,
+                'multiple' => false,
                 'label_attr' => [
                     'class' => 'bg-dark'
                 ],

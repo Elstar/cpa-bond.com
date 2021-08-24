@@ -2,11 +2,11 @@
 
 namespace App\Form\Admin;
 
-use App\Entity\Category;
+
 use App\Entity\PreLanding;
 use App\Repository\CategoryRepository;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -23,19 +23,17 @@ class PreLandingFormType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        /**
+         * @var PreLanding $platform
+         */
+        $platform = $options['data'];
+
         $builder
             ->add('name')
             ->add('url')
-            ->add('category', EntityType::class, [
-                'class' => Category::class,
-                'choice_label' => function (Category $category) {
-                    return sprintf('%s', str_repeat("▬", $category->getLvl()) . $category->getName());
-                },
-                'choices' => $this->categoryRepository->getTree(),
-                'attr' => [
-                    'disabled' => 'disabled',
-                    'class' => 'bg-dark'
-                ]
+            ->add('category', HiddenType::class, [
+                'mapped' => false,
+                'data' => $platform->getCategory()->getId()
             ])
         ;
     }

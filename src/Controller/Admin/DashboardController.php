@@ -9,9 +9,6 @@ use Symfony\Component\Routing\Annotation\Route;
 class DashboardController extends AbstractController
 {
     /**
-     * @Route("/admin", name="app_admin_dashboard")
-     */
-    /**
      * @Route({"uk": "/admin", "ru": "/ru/admin", "en": "/en/admin"}, name="app_admin_dashboard")
      */
     public function index(): Response

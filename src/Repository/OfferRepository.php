@@ -63,7 +63,7 @@ class OfferRepository extends ServiceEntityRepository
 
         return $qb
             ->orderBy('offer.createdAt', 'DESC')
-            ->leftJoin('offer.Currency', 'currency')
+            ->leftJoin('offer.currency', 'currency')
             ->addSelect('currency')
         ;
     }

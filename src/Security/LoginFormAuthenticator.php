@@ -32,6 +32,12 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         $this->userRepository = $userRepository;
     }
 
+    public function supports(Request $request): bool
+    {
+
+        return $request->attributes->get("_route") === 'app_login' && $request->isMethod('POST');
+    }
+
     public function authenticate(Request $request): PassportInterface
     {
 
