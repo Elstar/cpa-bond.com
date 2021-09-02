@@ -75,7 +75,8 @@ class LeadController extends AbstractController
                 /**
                  * @var Stream $stream;
                  */
-                $stream = $streamRepository->findOneBy(['uniqueId' => $data['stream_id']]);
+
+                $stream = $streamRepository->findOneBy(['uniqueId' => trim($data['stream_id'])]);
 
                 if (empty($stream) || $stream->getUser()->getId() != $user->getId()) {
                     $dataError = [
@@ -120,6 +121,8 @@ class LeadController extends AbstractController
                         ->setHash($hash)
                         ->setStatus(0)
                         ->setPayStatus(0)
+                        ->setUniqueId()
+                        ->setGatewayStatus(0)
                     ;
                     if (!empty($data['ua'])) {
                         $lead->setUa($data['ua']);
@@ -139,10 +142,17 @@ class LeadController extends AbstractController
                     if (!empty($data['name'])) {
                         $lead->setFirstName($data['name']);
                     }
+                    if (!empty($data['sum'])) {
+                        $lead->setSum((int)$data['sum']);
+                    }
+                    if (!empty($data['referer'])) {
+                        $lead->setReferer($data['referer']);
+                    }
+                    $lead->setFullRequestData(serialize($data));
                     $em->persist($lead);
                     $em->flush();
                     $dataSuccess = [
-                        'lead_id' => $lead->getId(),
+                        'lead_id' => $lead->getUniqueId(),
                         'status' => 'ok'
                     ];
                 } else {
@@ -161,6 +171,53 @@ class LeadController extends AbstractController
             return new JsonResponse($dataError, $status);
         }
 
+        return $this->json($dataSuccess, $status, []);
+    }
+
+    /**
+     * @Route("/api/v1/get-lead/{uniqueId}", name="api_order_get")
+     */
+    public function getLead(Lead $lead, Request $request): Response
+    {
+        $status = 200;
+        if ($request->getMethod() != 'GET') {
+            $dataError = [
+                'message' => 'You need GET method for get lead'
+            ];
+            $status = Response::HTTP_METHOD_NOT_ALLOWED;
+        }
+
+        if (empty($lead)) {
+            $dataError = [
+                'message' => 'Empty data'
+            ];
+            $status = Response::HTTP_BAD_REQUEST;
+        } else {
+            $ip = $lead->getIp();
+            /**
+             * @var IP $ip
+             */
+            $dataSuccess = [
+                'id' => $lead->getUniqueId(),
+                'stream_id' => $lead->getStream()->getUniqueId(),
+                'geo' => $lead->getGeo()->getName(),
+                'ip' => $ip->getDotAddress(),
+                'name' => $lead->getFirstName(),
+                'phone' => $lead->getPhone(),
+                'status' => $lead->getStatus(),
+                'offer_id' => $lead->getOffer()->getId(),
+                'utm_medium' => $lead->getUtmMedium(),
+                'utm_campaign' => $lead->getUtmCampaign(),
+                'utm_content' => $lead->getUtmContent(),
+                'utm_term' => $lead->getUtmTerm(),
+                'created_at' => $lead->getCreatedAt(),
+                'updated_at' => $lead->getUpdatedAt()
+            ];
+        }
+        if (!empty($dataError)) {
+            $dataError['status'] = 'error';
+            return new JsonResponse($dataError, $status);
+        }
         return $this->json($dataSuccess, $status, []);
     }
 }

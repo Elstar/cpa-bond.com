@@ -6,6 +6,7 @@ use App\Entity\Category;
 use App\Entity\Currency;
 use App\Entity\Geo;
 use App\Entity\Offer;
+use App\Entity\Partners;
 use App\Entity\PayTypes;
 use App\Repository\LandingRepository;
 use App\Repository\PreLandingPageRepository;
@@ -33,6 +34,7 @@ class OfferFixtures extends BaseFixtures implements DependentFixtureInterface
         $this->createMany(Offer::class, 5, function (Offer $offer) {
             $category = $this->getRandomReference(Category::class);
             $offer
+                ->setPartner($this->getRandomReference(Partners::class))
                 ->setName($this->faker->name)
                 ->setGeoInfo($this->faker->text)
                 ->setSourceTraffic($this->faker->text)
@@ -40,6 +42,7 @@ class OfferFixtures extends BaseFixtures implements DependentFixtureInterface
                 ->setPaySum($this->faker->numberBetween(100, 500))
                 ->setCategory($category)
                 ->setCurrency($this->getRandomReference(Currency::class))
+                ->setSum($this->faker->numberBetween(9, 299))
                 ->setTranslatableLocale('uk')
             ;
             $offer->setPayType($this->getRandomReference(PayTypes::class));
@@ -79,7 +82,8 @@ class OfferFixtures extends BaseFixtures implements DependentFixtureInterface
             CurrensyFixtures::class,
             PreLandingFixtures::class,
             LandingFixtures::class,
-            PreLandingPageFixtures::class
+            PreLandingPageFixtures::class,
+            PartnersFixtures::class
         ];
     }
 }

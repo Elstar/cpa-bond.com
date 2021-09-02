@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\LeadRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Index;
 use Doctrine\ORM\Mapping\Table;
@@ -22,7 +24,7 @@ class Lead
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", options={"unsigned":true})
      */
     private $id;
 
@@ -108,6 +110,41 @@ class Lead
      * @ORM\Column(type="integer", nullable=true, options={"default": 0, "unsigned":true, "comment": "0 - unpayed, 1 - payed"})
      */
     private $payStatus;
+
+    /**
+     * @ORM\Column(type="string", length=13, unique=true)
+     */
+    private ?string $uniqueId;
+
+    /**
+     * @ORM\Column(type="integer", options={"default": 0, "unsigned":true, "comment": "0 - not sended, 1 - sended"})
+     */
+    private $gatewayStatus;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true, options={"comment": "lead price for client"})
+     */
+    private $sum;
+
+    /**
+     * @ORM\Column(type="text", nullable=true, options={"comment": "serialize request data"})
+     */
+    private $fullRequestData;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $referer;
+
+    /**
+     * @ORM\OneToMany(targetEntity=BalanceOperations::class, mappedBy="lead")
+     */
+    private $balanceOperations;
+
+    public function __construct()
+    {
+        $this->balanceOperations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -302,6 +339,96 @@ class Lead
     public function setPayStatus(?int $payStatus): self
     {
         $this->payStatus = $payStatus;
+
+        return $this;
+    }
+
+    public function getUniqueId(): ?string
+    {
+        return $this->uniqueId;
+    }
+
+    public function setUniqueId(): self
+    {
+        $this->uniqueId = uniqid();
+
+        return $this;
+    }
+
+    public function getGatewayStatus(): ?int
+    {
+        return $this->gatewayStatus;
+    }
+
+    public function setGatewayStatus(int $gatewayStatus): self
+    {
+        $this->gatewayStatus = $gatewayStatus;
+
+        return $this;
+    }
+
+    public function getSum(): ?int
+    {
+        return $this->sum;
+    }
+
+    public function setSum(int $sum): self
+    {
+        $this->sum = $sum;
+
+        return $this;
+    }
+
+    public function getFullRequestData(): ?string
+    {
+        return $this->fullRequestData;
+    }
+
+    public function setFullRequestData(string $fullRequestData): self
+    {
+        $this->fullRequestData = $fullRequestData;
+
+        return $this;
+    }
+
+    public function getReferer(): ?string
+    {
+        return $this->referer;
+    }
+
+    public function setReferer(?string $referer): self
+    {
+        $this->referer = $referer;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BalanceOperations[]
+     */
+    public function getBalanceOperations(): Collection
+    {
+        return $this->balanceOperations;
+    }
+
+    public function addBalanceOperation(BalanceOperations $balanceOperation): self
+    {
+        if (!$this->balanceOperations->contains($balanceOperation)) {
+            $this->balanceOperations[] = $balanceOperation;
+            $balanceOperation->setLead($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBalanceOperation(BalanceOperations $balanceOperation): self
+    {
+        if ($this->balanceOperations->removeElement($balanceOperation)) {
+            // set the owning side to null (unless already changed)
+            if ($balanceOperation->getLead() === $this) {
+                $balanceOperation->setLead(null);
+            }
+        }
 
         return $this;
     }

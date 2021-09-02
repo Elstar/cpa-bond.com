@@ -99,6 +99,17 @@ class Offer
      */
     private $preLandingPage;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Partners::class, inversedBy="offers")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $partner;
+
+    /**
+     * @ORM\Column(type="integer", options={"default": 0, "unsigned":true, "comment": "Sum in lead for clients"})
+     */
+    private $sum;
+
     public function __construct()
     {
         $this->Geo = new ArrayCollection();
@@ -327,6 +338,30 @@ class Offer
     public function removePreLandingPage(PreLandingPage $preLandingPage): self
     {
         $this->preLandingPage->removeElement($preLandingPage);
+
+        return $this;
+    }
+
+    public function getPartner(): ?Partners
+    {
+        return $this->partner;
+    }
+
+    public function setPartner(?Partners $partner): self
+    {
+        $this->partner = $partner;
+
+        return $this;
+    }
+
+    public function getSum(): ?int
+    {
+        return $this->sum;
+    }
+
+    public function setSum(int $sum): self
+    {
+        $this->sum = $sum;
 
         return $this;
     }

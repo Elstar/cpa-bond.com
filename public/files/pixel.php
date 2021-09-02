@@ -1,5 +1,6 @@
 <?php
 header('Content-type: image/png');
+ini_set("display_errors", "1");
 error_reporting(E_ALL);
 include_once __DIR__ . '/../config.php';
 include_once __DIR__ . '/../classes/class.pdoHelper.php';
@@ -20,6 +21,7 @@ function getIp()
 $pixel = gzinflate(base64_decode('6wzwc+flkuJiYGDg9fRwCQLSjCDMwQQkJ5QH3wNSbCVBfsEMYJC3jH0ikOLxdHEMqZiTnJCQAOSxMDB+E7cIBcl7uvq5rHNKaAIA'));
 
 $streamId = 0;
+
 if (isset($_GET['stream_id'])) {
     $streamId = trim(strip_tags($_GET['stream_id']));
     $stream = pdoHelper::getInstance()->selectRow('SELECT * FROM stream WHERE unique_id=?', [$streamId]);

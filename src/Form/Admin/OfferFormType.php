@@ -7,6 +7,7 @@ use App\Entity\Currency;
 use App\Entity\Geo;
 use App\Entity\Landing;
 use App\Entity\Offer;
+use App\Entity\Partners;
 use App\Entity\PayTypes;
 use App\Entity\PreLanding;
 use App\Entity\PreLandingPage;
@@ -16,6 +17,7 @@ use App\Repository\CategoryRepository;
 use App\Repository\CurrencyRepository;
 use App\Repository\GeoRepository;
 use App\Repository\LandingRepository;
+use App\Repository\PartnersRepository;
 use App\Repository\PayTypesRepository;
 use App\Repository\PreLandingPageRepository;
 use App\Repository\PreLandingRepository;
@@ -37,6 +39,7 @@ class OfferFormType extends AbstractType
     private PreLandingRepository $preLandingRepository;
     private LandingRepository $landingRepository;
     private PreLandingPageRepository $preLandingPageRepository;
+    private PartnersRepository $partnersRepository;
 
     public function __construct(
         GeoRepository $geoRepository,
@@ -45,7 +48,8 @@ class OfferFormType extends AbstractType
         CategoryRepository $categoryRepository,
         PreLandingRepository $preLandingRepository,
         LandingRepository $landingRepository,
-        PreLandingPageRepository $preLandingPageRepository
+        PreLandingPageRepository $preLandingPageRepository,
+        PartnersRepository $partnersRepository
     ) {
         $this->geoRepository = $geoRepository;
         $this->currencyRepository = $currencyRepository;
@@ -54,6 +58,7 @@ class OfferFormType extends AbstractType
         $this->preLandingRepository = $preLandingRepository;
         $this->landingRepository = $landingRepository;
         $this->preLandingPageRepository = $preLandingPageRepository;
+        $this->partnersRepository = $partnersRepository;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -76,6 +81,16 @@ class OfferFormType extends AbstractType
         }
 
         $builder
+            ->add('partner', EntityType::class, [
+                'class' => Partners::class,
+                'choices' => $this->partnersRepository->findAll(),
+                'choice_label' => function (Partners $partners) {
+                    return sprintf('%s', $partners->getName());
+                },
+                'attr' => [
+                    'class' => 'bg-dark'
+                ]
+            ])
             ->add('category', EntityType::class, [
                 'class' => Category::class,
                 'choice_label' => function (Category $category) {
@@ -87,6 +102,7 @@ class OfferFormType extends AbstractType
                 ]
             ])
             ->add('name')
+            ->add('sum',)
             ->add('geo', EntityType::class, [
                 'class' => Geo::class,
                 'choice_label' => function (Geo $geo) {

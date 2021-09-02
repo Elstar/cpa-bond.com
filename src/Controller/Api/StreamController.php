@@ -30,6 +30,8 @@ class StreamController extends AbstractController
             $status = Response::HTTP_BAD_REQUEST;
         } else {
             $dataSuccess = [
+                'id' => $stream->getId(),
+                'offer_id' => $stream->getOffer()->getId(),
                 'landing' => $stream->getLanding()->getUrl(),
                 'google_tag_id' => $stream->getGoogleTagId(),
                 'google_tag_conversion_id' => $stream->getGoogleTagConversionId()
