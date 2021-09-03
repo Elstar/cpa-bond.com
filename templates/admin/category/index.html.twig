@@ -36,12 +36,12 @@
     {% endif %}
 
     {% if preLandings %}
-        {% include 'admin/partial/category.platforms.html.twig' with {'platformType': 'Pre-Landings', 'platforms': preLandings} %}
+        {% include 'admin/partial/category.platforms.html.twig' with {'platformType': 'Pre-Landings', 'platform_type': 'pre_landing', 'platforms': preLandings} %}
     {% endif %}
     {% if landings %}
-        {% include 'admin/partial/category.platforms.html.twig' with {'platformType': 'Landings', 'platforms': landings} %}
+        {% include 'admin/partial/category.platforms.html.twig' with {'platformType': 'Landings', 'platform_type': 'landing', 'platforms': landings} %}
     {% endif %}
     {% if preLandingPages %}
-        {% include 'admin/partial/category.platforms.html.twig' with {'platformType': 'Pre-Landing-Pages', 'platforms': preLandingPages} %}
+        {% include 'admin/partial/category.platforms.html.twig' with {'platformType': 'Pre-Landing-Pages', 'platform_type': 'pre_landing_page', 'platforms': preLandingPages} %}
     {% endif %}
 {% endblock %}

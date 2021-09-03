@@ -179,13 +179,13 @@ class CategoryController extends AbstractController
             $platform = new PreLandingPage();
         }
 
-        $platformType = str_replace("Entity","Form\Admin", get_class($platform));
+        $platformType = str_replace("Entity", "Form\Admin", get_class($platform));
 
         $platform->setCategory($category);
         $platformForm = $this->createForm($platformType . 'FormType', $platform);
 
         $platformType = explode('\\', $platformType);
-        $platformType = (string) $platformType[array_key_last($platformType)];
+        $platformType = (string)$platformType[array_key_last($platformType)];
 
         $platformForm->handleRequest($request);
         if ($platformForm->isSubmitted() && $platformForm->isValid()) {
@@ -197,6 +197,65 @@ class CategoryController extends AbstractController
             $em->flush();
 
             $this->addFlash('flash_message', "{$platformType} added successfully");
+        }
+
+        return $this->render('admin/category/platform.create.html.twig', [
+            'category' => $category,
+            'tree' => $tree,
+            'platformForm' => $platformForm->createView(),
+            'surf' => 0,
+            'platformType' => $platformType
+        ]);
+    }
+
+    /**
+     *
+     * @Route(
+     *     {"uk": "/admin/category/uk/{id}/create_platform/{platform}/{platformId}", "ru": "/admin/category/ru/{id}/create_platform/{platform}", "en": "/admin/category/en/{id}/create_platform/{platform}"},
+     *     name="app_admin_category_platform_edit",
+     *     requirements={
+     *          "platform": "pre_landing|landing|pre_landing_page"
+     *     }
+     * )
+     */
+    public function editPlatform(
+        Category $category,
+        string $platform,
+        int $platformId,
+        CategoryRepository $categoryRepository,
+        PreLandingRepository $preLandingRepository,
+        LandingRepository $landingRepository,
+        PreLandingPageRepository $preLandingPageRepository,
+        EntityManagerInterface $em,
+        Request $request
+    ): Response {
+        $tree = $categoryRepository->getPath($category);
+
+        if ($platform == 'pre_landing') {
+            $platform = $preLandingRepository->findOneBy(['id' => $platformId]);
+        } elseif ($platform == 'landing') {
+            $platform = $landingRepository->findOneBy(['id' => $platformId]);
+        } elseif ($platform == 'pre_landing_page') {
+            $platform = $preLandingPageRepository->findOneBy(['id' => $platformId]);
+        }
+
+        $platformType = str_replace("Entity", "Form\Admin", get_class($platform));
+
+        $platformForm = $this->createForm($platformType . 'FormType', $platform);
+
+        $platformType = explode('\\', $platformType);
+        $platformType = (string)$platformType[array_key_last($platformType)];
+
+        $platformForm->handleRequest($request);
+        if ($platformForm->isSubmitted() && $platformForm->isValid()) {
+
+            $platform = $platformForm->getData();
+            $platform->setCr(0);
+
+            $em->persist($platform);
+            $em->flush();
+
+            $this->addFlash('flash_message', "{$platformType} edited successfully");
         }
 
         return $this->render('admin/category/platform.create.html.twig', [

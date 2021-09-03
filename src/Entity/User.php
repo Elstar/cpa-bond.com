@@ -245,7 +245,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->telegram;
     }
 
-    public function setTelegram(string $telegram): self
+    public function setTelegram(?string $telegram): self
     {
         $this->telegram = $telegram;
 

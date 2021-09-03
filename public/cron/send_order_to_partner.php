@@ -1,5 +1,6 @@
 <?php
 
+ini_set("display_errors", "1");
 error_reporting(E_ALL);
 include_once __DIR__ . '/../config.php';
 include_once __DIR__ . '/../classes/class.pdoHelper.php';
@@ -18,8 +19,10 @@ if (!empty($needSendLeads)) {
         $stream = pdoHelper::getInstance()->selectRow("SELECT * FROM stream WHERE id=?", [$needSendLead['stream_id']]);
         $offer = pdoHelper::getInstance()->selectRow("SELECT * FROM offer WHERE id=?", [$needSendLead['offer_id']]);
         $partner = pdoHelper::getInstance()->selectRow("SELECT * FROM partners WHERE id=?", [$offer['partner_id']]);
+
         $partnerAdditionalParams = pdoHelper::getInstance()->selectRows("SELECT * FROM partner_additional_params WHERE partner_id=?",
             [$offer['partner_id']]);
+
         $needSendLead['stream'] = $stream;
         $data = [];
 
@@ -37,6 +40,7 @@ if (!empty($needSendLeads)) {
                 'ip' => (string)$needSendLead['ip'],
                 'ua' => (string)$needSendLead['ua'],
                 'order_source' => (string)$needSendLead['referer'],
+                'uid' => (string) "bond_00" . $stream['user_id'],
                 'items' => [
                     [
                         'item_id' => $offer['id'],
@@ -50,7 +54,6 @@ if (!empty($needSendLeads)) {
                 $data[$partnerAdditionalParam['value_name']] = $partnerAdditionalParam['value'];
             }
         }
-
         if (!empty($data)) {
             if ($partner['data_format'] == 'xml') {
                 $xml_data = new SimpleXMLElement('<?xml version="1.0"?><order></order>');

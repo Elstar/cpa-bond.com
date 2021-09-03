@@ -15,7 +15,7 @@
             <th scope="row">{{ platform.id }}</th>
             <td>{{ platform.name }}</td>
             <td><a href="{{ platform.url }}" target="_blank">{{ platform.url }}</a></td>
-            <td><a class="bi-pen" href="{{ path('app_admin_category_edit', {"id": platform.id}) }}"></a></td>
+            <td><a class="bi-pen" href="{{ path('app_admin_category_platform_edit', {"id": category.id, "platform": platform_type, "platformId": platform.id}) }}"></a></td>
         </tr>
     {% endfor %}
     </tbody>
