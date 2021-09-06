@@ -63,6 +63,22 @@ class StreamController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route({"uk": "/uk/webmaster/stream/edit/{id}", "ru": "/ru/webmaster/stream/edit/{id}", "en": "/en/webmaster/stream/edit/{id}"}, name="app_webmaster_stream_edit")
+     */
+    public function edit(Stream $stream, EntityManagerInterface $em, Request $request): Response
+    {
+        $streamForm = $this->createForm(StreamFormType::class, $stream);
+
+        if ($this->handleFormRequest($streamForm, $em, $request)) {
+            $this->addFlash('flash_message', 'Stream edited successfully');
+        }
+
+        return $this->render('webmaster/stream/create.html.twig', [
+            'streamForm' => $streamForm->createView()
+        ]);
+    }
+
     private function handleFormRequest(FormInterface $form, EntityManagerInterface $em, Request $request): ?Stream
     {
         $form->handleRequest($request);

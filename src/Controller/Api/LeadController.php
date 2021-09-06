@@ -123,6 +123,7 @@ class LeadController extends AbstractController
                         ->setPayStatus(0)
                         ->setUniqueId()
                         ->setGatewayStatus(0)
+                        ->setUser($user)
                     ;
                     if (!empty($data['ua'])) {
                         $lead->setUa($data['ua']);
@@ -177,7 +178,7 @@ class LeadController extends AbstractController
     /**
      * @Route("/api/v1/get-lead/{uniqueId}", name="api_order_get")
      */
-    public function getLead(Lead $lead, Request $request): Response
+    public function getLead(?Lead $lead, Request $request): Response
     {
         $status = 200;
         if ($request->getMethod() != 'GET') {

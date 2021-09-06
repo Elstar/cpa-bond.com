@@ -1,12 +1,28 @@
 {% extends 'webmaster/base.html.twig' %}
 
-{% block title %}{% trans %}Create stream{% endtrans %}{% endblock %}
+{% block title %}
+    {% if app.request.attributes.get('_route')|route_name_to_array|last == 'create' %}
+        {% trans %}Create stream{% endtrans %}
+    {% else %}
+        {% trans %}Edit stream{% endtrans %}
+    {% endif %}
+{% endblock %}
 
 {% block body %}
-    <h2>{% trans %}Create stream{% endtrans %}</h2>
+    <h2>
+        {% if app.request.attributes.get('_route')|route_name_to_array|last == 'create' %}
+            {% trans %}Create stream{% endtrans %}
+        {% else %}
+            {% trans %}Edit stream{% endtrans %}
+        {% endif %}
+    </h2>
     <hr>
     {{ form_start(streamForm) }}
         {{ form_widget(streamForm) }}
-        <button type="submit" class="btn btn-primary mb-2">{% trans %}Create{% endtrans %}</button>
+        {% if app.request.attributes.get('_route')|route_name_to_array|last == 'create' %}
+            <button type="submit" class="btn btn-primary mb-2">{% trans %}Create{% endtrans %}</button>
+        {% else %}
+            <button type="submit" class="btn btn-primary mb-2">{% trans %}Edit{% endtrans %}</button>
+        {% endif %}
     {{ form_end(streamForm) }}
 {% endblock %}

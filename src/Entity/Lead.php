@@ -15,7 +15,8 @@ use Darsyn\IP\Version\Multi as IP;
  * @ORM\Entity(repositoryClass=LeadRepository::class)
  * @Table(name="lead",indexes={
  *     @Index(name="hash", columns={"hash"}),
- *     @Index(name="streamIp", columns={"stream_id", "ip"})
+ *     @Index(name="streamIp", columns={"stream_id", "ip"}),
+ *     @Index(name="userDate", columns={"user_id", "created_at"})
  * })
  */
 class Lead
@@ -140,6 +141,12 @@ class Lead
      * @ORM\OneToMany(targetEntity=BalanceOperations::class, mappedBy="lead")
      */
     private $balanceOperations;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class)
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
 
     public function __construct()
     {
@@ -429,6 +436,18 @@ class Lead
                 $balanceOperation->setLead(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }
