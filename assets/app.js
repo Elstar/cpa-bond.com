@@ -11,9 +11,11 @@ import './styles/app.css';
 // start the Stimulus application
 
 import './bootstrap';
-import { Tab, Dropdown, Tooltip} from 'bootstrap';
+import { Tab, Dropdown, Tooltip, Modal} from 'bootstrap';
 import 'select2'
+
 require('bootstrap-icons/font/bootstrap-icons.css');
 require('./js/bootstrap_file_field')
 require('./js/tiny.js')
 require('./js/select2.js')
+require('./js/script.js')

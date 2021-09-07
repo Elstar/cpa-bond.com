@@ -79,6 +79,17 @@ class StreamController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route({"uk": "/uk/webmaster/stream/delete/{id}", "ru": "/ru/webmaster/stream/delete/{id}", "en": "/en/webmaster/stream/delete/{id}"}, name="app_webmaster_stream_delete")
+     */
+    public function delete(Stream $stream, StreamRepository $streamRepository): Response
+    {
+        if ($stream && $stream->getUser() == $this->getUser()) {
+            if ($streamRepository->deleteStream($stream))
+                return $this->redirectToRoute('app_webmaster_stream');
+        }
+    }
+
     private function handleFormRequest(FormInterface $form, EntityManagerInterface $em, Request $request): ?Stream
     {
         $form->handleRequest($request);

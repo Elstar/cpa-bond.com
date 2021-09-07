@@ -20,10 +20,21 @@ class StreamRepository extends ServiceEntityRepository
         parent::__construct($registry, Stream::class);
     }
 
-    public function findStreamsByUserQuery(User $user) {
+    public function findStreamsByUserQuery(User $user)
+    {
         return $this->createQueryBuilder('s')
             ->andWhere('s.user = :user')
-            ->setParameter('user', $user->getId())
+            ->setParameter('user', $user->getId());
+    }
+
+    public function deleteStream(Stream $stream)
+    {
+        return $this->createQueryBuilder('s')
+            ->delete()
+            ->where('s.id = :id')
+            ->setParameter('id', $stream->getId())
+            ->getQuery()
+            ->getResult()
         ;
     }
 }

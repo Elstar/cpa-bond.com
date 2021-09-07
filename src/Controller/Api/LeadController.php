@@ -99,12 +99,12 @@ class LeadController extends AbstractController
                 }
                 if ($stream) {
                     $hash = md5($stream->getOffer()->getId() . '-' . $data['phone']);
-                    if ($this->leadRepository->getLastLeadsFromOneIpCount($ip, $stream) > 2) {
+                    if ($this->leadRepository->getLastLeadsFromOneIpCount($ip, $stream) > 10) {
                         $dataError = [
                             'message' => 'To much orders from one IP'
                         ];
                     }
-                    if ($this->leadRepository->getLasLeadsByOfferAndPhoneCount($hash) > 0) {
+                    if ($this->leadRepository->getLasLeadsByOfferAndPhoneCount($hash) > 10) {
                         $dataError = [
                             'message' => 'Duplicated lead in system'
                         ];
