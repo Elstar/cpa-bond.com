@@ -83,7 +83,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $streams;
 
     /**
-     * @ORM\OneToMany(targetEntity=Postback::class, mappedBy="user")
+     * @ORM\OneToOne(targetEntity=Postback::class, mappedBy="user")
      */
     private $postbacks;
 
@@ -100,7 +100,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __construct()
     {
         $this->streams = new ArrayCollection();
-        $this->postbacks = new ArrayCollection();
         $this->supportUsers = new ArrayCollection();
     }
 
@@ -307,9 +306,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection|Postback[]
+     * @return Postback
      */
-    public function getPostbacks(): Collection
+    public function getPostbacks(): ?Postback
     {
         return $this->postbacks;
     }
@@ -317,7 +316,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function addPostbacks(Postback $postbacks): self
     {
         if (!$this->postbacks->contains($postbacks)) {
-            $this->postbacks[] = $postbacks;
+            $this->postbacks = $postbacks;
             $postbacks->setUser($this);
         }
 

@@ -1,20 +1,62 @@
-{% extends 'base.html.twig' %}
+{% extends 'webmaster/base.html.twig' %}
 
-{% block title %}Hello ProfileController!{% endblock %}
+{% block title %}{% trans %}Profile{% endtrans %}{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/Applications/XAMPP/xamppfiles/htdocs/dev/cpa-bond.com/src/Controller/Webmaster/ProfileController.php'|file_link(0) }}">src/Controller/Webmaster/ProfileController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/Applications/XAMPP/xamppfiles/htdocs/dev/cpa-bond.com/templates/webmaster/profile/index.html.twig'|file_link(0) }}">templates/webmaster/profile/index.html.twig</a></code></li>
-    </ul>
-</div>
+    <h1>{% trans %}Profile{% endtrans %}</h1>
+    <table class="table table-dark">
+        <tr>
+            <td><strong>Email</strong></td>
+            <td>{{ app.user.email }}</td>
+        </tr>
+        <tr>
+            <td><strong>{% trans %}Balance{% endtrans %}</strong></td>
+            <td>₴ {{ app.user.balance }}</td>
+        </tr>
+    </table>
+    <h2>Api</h2>
+    <table class="table table-dark">
+        <tr>
+            <td><strong>{% trans %}Token{% endtrans %}</strong></td>
+            <td>{{ app.user.apiToken }}</td>
+        </tr>
+        <tr>
+            <td><strong>{% trans %}Download{% endtrans %}</strong></td>
+            <td>
+                {% trans %}
+                    Dear partner! If you want to drive traffic to the API using your landing page and transit, please read the attached instructions below.
+                {% endtrans %}
+            </td>
+        </tr>
+        <tr>
+            <td><strong>{% trans %}Instruction{% endtrans %}</strong></td>
+            <td>
+                <a href="#" target="_blank">{% trans %}Open instruction{% endtrans %}</a>
+            </td>
+        </tr>
+        <tr>
+            <td><strong>{% trans %}Download{% endtrans %}</strong></td>
+            <td>
+                <a href="{{ path('app_webmaster_download_order_file') }}" target="_blank">order.php</a>
+            </td>
+        </tr>
+    </table>
+    <h2>Postback</h2>
+    <p>
+        {lead_id} - {% trans%}lead id{% endtrans%} ({% trans %}string 13 symbols{% endtrans %})<br>
+        {status_lead} - {% trans %}status is numeric{% endtrans%}  (0 - new, 2 - confirmed, 1 - rejected, 3 - trash)<br>
+        {utm_source} - {% trans %}stream id{% endtrans %} ({% trans %}string 13 symbols{% endtrans %})<br>
+        {utm_medium} - Utm Medium<br>
+        {utm_campaign} - Utm Campaign<br>
+        {utm_content} - Utm Content<br>
+        {utm_term} - Utm Term<br>
+        {money} - {% trans %}Lead rate{% endtrans %}<br>
+        {currency} - {% trans %}Payout currency{% endtrans %}
+        <hr>
+        {% trans %}Example{% endtrans %}: https://cpa-bond.com/ru/postback/test?lead_id={lead_id}&status_lead={status_lead}&utm_source={utm_source}&utm_medium={utm_medium}&utm_campaign={utm_campaign}&utm_content={utm_content}&utm_term={utm_term}&money={money}&currency={currency}
+    </p>
+    {{ form_start(postbackForm) }}
+        {{ form_widget(postbackForm) }}
+        <button type="submit" class="btn btn-info">{% trans %}Save{% endtrans %}</button>
+    {{ form_end(postbackForm) }}
 {% endblock %}
