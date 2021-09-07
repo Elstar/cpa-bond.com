@@ -71,9 +71,14 @@ if (!empty($needSendLeads)) {
             $arrObjData = simplexml_load_string($result);
             $arrObjData = settings::objectsIntoArray($arrObjData);
             $postbackLink = '';
-            if ((empty($arrObjData["errors"]) && !empty($arrObjData["item"])) || ($arrObjData["errors"][0]["error"]["error_code"] == 103) || ($arrObjData["errors"][0]["error"]["error_code"] == 111) || ($arrObjData["errors"]["error"]["error_text"] == "Order already exists")) {
+            if (
+                (empty($arrObjData["errors"]) && !empty($arrObjData["item"]))
+                || ($arrObjData["errors"][0]["error"]["error_code"] == 103)
+                || ($arrObjData["errors"][0]["error"]["error_code"] == 111)
+                || ($arrObjData["errors"]["error"]["error_text"] == "Order already exists")
+            ) {
                 //Заказ успешно передан партнеру
-                pdoHelper::getInstance()->update("UPDATE `lead` SET gateway_status=1 WHERE id=?", [$needSendLead['id']]);
+                pdoHelper::getInstance()->update("UPDATE `lead` SET gateway_status=1, response_from_partner=? WHERE id=?", [$result, $needSendLead['id']]);
 
                 $money = $stream['sum'];
                 if ($payTypes[$offer['pay_type_id']] == 'CPB') {
@@ -88,6 +93,7 @@ if (!empty($needSendLeads)) {
                 }
             } else {
                 //Ошибка передачи заказа партнеру
+                pdoHelper::getInstance()->update("UPDATE `lead` SET gateway_status=1, response_from_partner=? WHERE id=?", [$result, $needSendLead['id']]);
                 if ($stream['postback_trash']) {
                     $postbackLink = settings::setPostBackLink($stream['postback_trash'], $needSendLead);
                 }

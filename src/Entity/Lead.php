@@ -148,6 +148,11 @@ class Lead
      */
     private $user;
 
+    /**
+     * @ORM\Column(type="text", nullable=true, options={"comment": "response data from partner"})
+     */
+    private $responseFromPartner;
+
     public function __construct()
     {
         $this->balanceOperations = new ArrayCollection();
@@ -448,6 +453,18 @@ class Lead
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getResponseFromPartner(): ?string
+    {
+        return $this->responseFromPartner;
+    }
+
+    public function setResponseFromPartner(?string $responseFromPartner): self
+    {
+        $this->responseFromPartner = $responseFromPartner;
 
         return $this;
     }
