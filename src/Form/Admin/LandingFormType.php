@@ -2,10 +2,9 @@
 
 namespace App\Form\Admin;
 
-use App\Entity\Category;
+
 use App\Entity\Landing;
 use App\Repository\CategoryRepository;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;

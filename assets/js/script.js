@@ -1,7 +1,7 @@
 import $ from 'jquery';
 
 $(document).ready(function() {
-
+    $('[data-toggle="tooltip"]').tooltip();
     $('a.bi-trash').click(function () {
         let title = $(this).attr('data-title');
         let href = $(this).attr('data-href');

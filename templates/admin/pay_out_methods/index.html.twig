@@ -1,0 +1,40 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}{% trans %}Payout methods{% endtrans %}{% endblock %}
+
+{% block body %}
+    <a href="{{ path('app_admin_pay_out_methods_create') }}" class="btn btn-info">{% trans %}Create{% endtrans %}</a>
+    {% if payoutMethods %}
+        <div class="pt-2"></div>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th class="col-1" scope="col">#</th>
+                <th scope="col">{% trans %}Name{% endtrans %}</th>
+                <th scope="col-1">
+                    <span data-toggle="tooltip" title="{% trans %}In relation to UAH{% endtrans %}. {% trans %}Example{% endtrans %}: 0.037">
+                        {% trans %}Convert rate{% endtrans %}
+                    </span>
+                </th>
+                <th scope="col-1">
+                    <span data-toggle="tooltip" title="{% trans %}Example{% endtrans %}: 0.01">
+                        {% trans %}Commission{% endtrans %}
+                    </span>
+                </th>
+                <th class="col-1" scope="col">{% trans %}Actions{% endtrans %}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for payoutMethod in payoutMethods %}
+                <tr>
+                    <th scope="row">{{ payoutMethod.id }}</th>
+                    <td>{{ payoutMethod.name }}</td>
+                    <td>{{ payoutMethod.convertRate }}</td>
+                    <td>{{ payoutMethod.commission }}</td>
+                    <td><a class="bi-pen" href="{{ path('app_admin_pay_out_methods_edit', {"id": payoutMethod.id}) }}"></a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}

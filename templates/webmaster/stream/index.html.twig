@@ -18,7 +18,7 @@
         <tbody>
         {% for stream in pagination %}
             <tr>
-                <td>{{ stream.id }}</td>
+                <td>{{ stream.uniqueId }}</td>
                 <td>{{ stream.name }}</td>
                 <td>{{ stream.createdAt | date("d.m.Y H:i") }}</td>
                 <td>

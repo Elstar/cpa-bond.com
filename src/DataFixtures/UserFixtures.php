@@ -28,6 +28,7 @@ class UserFixtures extends BaseFixtures
                 ->setActivate(1)
                 ->setEmail('sergiy.dmb@gmail.com')
                 ->setPassword($this->passwordHasher->hashPassword($user,'111111'))
+                ->setPayOutAccess(0)
                 ->setApiToken(md5(uniqid('token_sergiy.dmb@gmail.com' . mt_rand(), true)))
             ;
         });

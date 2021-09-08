@@ -18,8 +18,9 @@ $data = [
     "name" => $_POST["name"],
     "phone" => $_POST["phone"],
     "ip" => getIp(),
-    "geo" => $_POST["geo"],// Берем из раздела "Потоки" столбец Гео и добавляем в форму создания заказа Пример: UA
+    "geo" => $_POST["geo"],// Берем из раздела "Потоки" столбец Geo и добавляем в форму создания заказа Пример: UA
     "ua" => $_SERVER["HTTP_USER_AGENT"],
+    "referer" => $_SERVER["HTTP_REFERER"]
 ];
 
 $apiKey = "d025e4d6462b991ccc2448d9116ddfd6";// Заменяем на свой из кабинета в разделе профиль
@@ -30,7 +31,7 @@ curl_setopt($ch, CURLOPT_URL, "https://cpa-bond.com/api/v1/new-lead");
 curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
 $headers[] = 'Authorization: Bearer ' . $apiKey;
-$headers[] = 'Content-Type: application/x-www-form-urlencoded';
+$headers[] = 'Content-Type: application/json';
 curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 if (isset($data['ua'])) {

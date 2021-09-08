@@ -110,8 +110,28 @@ class settings
     {
         if ($postbackLink) {
             $postbackLink = str_replace(
-                ['{lead_id}','{status_lead}','{utm_source}','{utm_medium}','{utm_campaign}','{utm_content}','{utm_term}','{money}','{currency}'],
-                [$lead['unique_id'], $lead['status'], $lead['stream']['unique_id'], $lead['utm_medium'], $lead['utm_campaign'], $lead['utm_content'], $lead['utm_term']],
+                [
+                    '{lead_id}',
+                    '{status_lead}',
+                    '{utm_source}',
+                    '{utm_medium}',
+                    '{utm_campaign}',
+                    '{utm_content}',
+                    '{utm_term}',
+                    '{money}',
+                    '{currency}'
+                ],
+                [
+                    $lead['unique_id'],
+                    $lead['status'],
+                    $lead['stream']['unique_id'],
+                    $lead['utm_medium'],
+                    $lead['utm_campaign'],
+                    $lead['utm_content'],
+                    $lead['utm_term'],
+                    $lead['money'],
+                    $lead['currency']
+                ],
                 $postbackLink
             );
         }

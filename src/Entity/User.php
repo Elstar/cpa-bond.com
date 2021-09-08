@@ -97,6 +97,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $supportUsers;
 
+    /**
+     * @ORM\Column(type="integer", options={"default": 0, "unsigned":true})
+     */
+    private $payOutAccess;
+
     public function __construct()
     {
         $this->streams = new ArrayCollection();
@@ -373,6 +378,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $supportUser->setManager(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPayOutAccess(): ?int
+    {
+        return $this->payOutAccess;
+    }
+
+    public function setPayOutAccess(int $payOutAccess): self
+    {
+        $this->payOutAccess = $payOutAccess;
 
         return $this;
     }

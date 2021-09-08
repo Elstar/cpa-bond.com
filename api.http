@@ -1,14 +1,13 @@
 POST https://cpa-bond.com/api/v1/new-lead
-#POST http://127.0.0.1:8000/api/v1/new-lead
 Content-Type: application/json
 Accept: application/json
-Authorization: Bearer a66a3730add6f9c22f347abdfd87f006
+Authorization: Bearer a66a3730add6f9c22f347abdfd87fe06
 
 {
   "stream_id": "612399e8e21b0",
   "name": "Сергей",
-  "phone": "0978530431",
+  "phone": "0978533431",
   "geo": "UA",
   "ip": "213.225.36.246",
-  "referer": "https://extragreen.helsi.life/"
+  "referer": "https://google.com/?gclid=Cj0KCQjwm9yJBhDTARIsABKIcGaupN44j1-zdwqYEE_J2-NPtW9qpeV2AmVSejml0E97-f345N8WF58dAmUwEALw_wcB"
 }

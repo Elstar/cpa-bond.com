@@ -30,6 +30,11 @@ class BalanceOperations
      */
     private $sum;
 
+    /**
+     * @ORM\Column(type="integer", options={"default":0, "unsigned":true, "comment": "0 - with lead, 1 - payOuts"})
+     */
+    private $operationType;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -55,6 +60,18 @@ class BalanceOperations
     public function setSum(float $sum): self
     {
         $this->sum = $sum;
+
+        return $this;
+    }
+
+    public function getOperationType(): ?int
+    {
+        return $this->operationType;
+    }
+
+    public function setOperationType(int $operationType): self
+    {
+        $this->operationType = $operationType;
 
         return $this;
     }

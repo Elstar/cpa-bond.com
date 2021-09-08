@@ -203,16 +203,18 @@ class LeadController extends AbstractController
                 'stream_id' => $lead->getStream()->getUniqueId(),
                 'geo' => $lead->getGeo()->getName(),
                 'ip' => $ip->getDotAddress(),
+                'ua' => $lead->getUa(),
                 'name' => $lead->getFirstName(),
                 'phone' => $lead->getPhone(),
                 'status' => $lead->getStatus(),
+                'status_comment' => $lead->getStatusComment(),
                 'offer_id' => $lead->getOffer()->getId(),
                 'utm_medium' => $lead->getUtmMedium(),
                 'utm_campaign' => $lead->getUtmCampaign(),
                 'utm_content' => $lead->getUtmContent(),
                 'utm_term' => $lead->getUtmTerm(),
-                'created_at' => $lead->getCreatedAt(),
-                'updated_at' => $lead->getUpdatedAt()
+                'referer' => $lead->getReferer(),
+                'created_at' => $lead->getCreatedAt()
             ];
         }
         if (!empty($dataError)) {
