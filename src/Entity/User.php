@@ -102,10 +102,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $payOutAccess;
 
+    /**
+     * @ORM\OneToMany(targetEntity=PaymentSystem::class, mappedBy="user")
+     */
+    private $paymentSystems;
+
     public function __construct()
     {
         $this->streams = new ArrayCollection();
         $this->supportUsers = new ArrayCollection();
+        $this->paymentSystems = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -390,6 +396,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPayOutAccess(int $payOutAccess): self
     {
         $this->payOutAccess = $payOutAccess;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PaymentSystem[]
+     */
+    public function getPaymentSystems(): Collection
+    {
+        return $this->paymentSystems;
+    }
+
+    public function addPaymentSystem(PaymentSystem $paymentSystem): self
+    {
+        if (!$this->paymentSystems->contains($paymentSystem)) {
+            $this->paymentSystems[] = $paymentSystem;
+            $paymentSystem->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePaymentSystem(PaymentSystem $paymentSystem): self
+    {
+        if ($this->paymentSystems->removeElement($paymentSystem)) {
+            // set the owning side to null (unless already changed)
+            if ($paymentSystem->getUser() === $this) {
+                $paymentSystem->setUser(null);
+            }
+        }
 
         return $this;
     }

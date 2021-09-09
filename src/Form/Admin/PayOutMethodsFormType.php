@@ -3,8 +3,8 @@
 namespace App\Form\Admin;
 
 use App\Entity\PayOutMethods;
-use Doctrine\DBAL\Types\FloatType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -15,6 +15,7 @@ class PayOutMethodsFormType extends AbstractType
     {
         $builder
             ->add('name')
+            ->add('active')
             ->add('convertRate', MoneyType::class, [
                 'currency' => 'UAH',
                 'scale' => 4
@@ -23,6 +24,19 @@ class PayOutMethodsFormType extends AbstractType
                 'currency' => 'UAH',
                 'scale' => 4
             ])
+        ;
+
+        $builder->get('active')
+            ->addModelTransformer(new CallbackTransformer(
+                function ($activeAsString) {
+                    // transform the string to boolean
+                    return (bool)(int)$activeAsString;
+                },
+                function ($activeAsBoolean) {
+                    // transform the boolean to string
+                    return (string)(int)$activeAsBoolean;
+                }
+            ))
         ;
     }
 

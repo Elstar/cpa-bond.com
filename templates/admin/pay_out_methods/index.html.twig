@@ -26,12 +26,15 @@
             </thead>
             <tbody>
             {% for payoutMethod in payoutMethods %}
-                <tr>
+                <tr{% if not payoutMethod.active %} class="table-danger"{% endif %}>
                     <th scope="row">{{ payoutMethod.id }}</th>
                     <td>{{ payoutMethod.name }}</td>
                     <td>{{ payoutMethod.convertRate }}</td>
                     <td>{{ payoutMethod.commission }}</td>
-                    <td><a class="bi-pen" href="{{ path('app_admin_pay_out_methods_edit', {"id": payoutMethod.id}) }}"></a></td>
+                    <td>
+                        <a class="bi-pen" href="{{ path('app_admin_pay_out_methods_edit', {"id": payoutMethod.id}) }}"></a>
+                        <a class="bi-bar-chart-steps" href="{{ path('app_admin_pay_out_methods_details', {"id": payoutMethod.id}) }}"></a>
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>

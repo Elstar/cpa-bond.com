@@ -1,0 +1,49 @@
+{% extends 'webmaster/base.html.twig' %}
+
+{% block title %}{% trans %}Payment systems{% endtrans %}{% endblock %}
+
+{% block body %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-dark">
+            <li class="breadcrumb-item"><a href="{{ path('app_webmaster_profile') }}">{% trans %}Profile{% endtrans %}</a></li>
+            <li class="breadcrumb-item active">{% trans %}Payment systems{% endtrans %}</li>
+        </ol>
+    </nav>
+    {% if paymentSystems %}
+        <ul class="nav nav-tabs">
+            {% for paymentSystem in paymentSystems %}
+                <li class="nav-item">
+                    <a
+                            class="nav-link
+                                {% if paymentSystem.id == payOutMethod.id %} active{% endif %}
+                                {% if not paymentSystem.active %} disabled{% endif %}
+                            "
+                            href="{{ path('app_webmaster_profile_payment', {'id': paymentSystem.id}) }}"
+                    >
+                        {{ paymentSystem.name }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+        {% if payOutMethod.paymentDetails %}
+            <div class="pt-2"></div>
+            <form method="post">
+            {% for paymentDetail in payOutMethod.paymentDetails %}
+                <div class="form-group">
+                    <label>{{ paymentDetail.detailProperty }}</label>
+                    <input
+                            type="text"
+                            class="form-control"
+                            name="detail_{{ paymentDetail.id }}"
+                            {% if paymentUserData %}
+                                {% set detail_key = 'detail_' ~ paymentDetail.id %}
+                                value="{{ paymentUserData[detail_key] }}"
+                            {% endif %}
+                    >
+                </div>
+                <button type="submit" class="btn btn-primary">{% trans %}Save{% endtrans %}</button>
+            {% endfor %}
+            </form>
+        {% endif %}
+    {% endif %}
+{% endblock %}

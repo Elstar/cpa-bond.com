@@ -1,0 +1,20 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}
+    {% trans %}Payout method detail properties edit{% endtrans %}
+{% endblock %}
+
+{% block body %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-dark">
+            <li class="breadcrumb-item"><a href="{{ path('app_admin_pay_out_methods') }}">{% trans %}Payout methods{% endtrans %}</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_admin_pay_out_methods_details', {'id': payOutMethods.id}) }}">{{ payOutMethods.name }}</a></li>
+            <li class="breadcrumb-item active">{% trans %}Edit{% endtrans %}</li>
+        </ol>
+    </nav>
+    {{ form_start(paymentDetailForm) }}
+        {{ form_widget(paymentDetailForm) }}
+        <button class="btn btn-info ml-1" type="submit">{% trans %}Edit{% endtrans %}</button>
+    {{ form_end(paymentDetailForm) }}
+{% endblock %}
+

@@ -21,9 +21,7 @@ class LocalesType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'choices' => [
-                array_combine($this->locales, $this->locales)
-            ]
+            'choices' => array_combine($this->locales, $this->locales)
         ]);
     }
 

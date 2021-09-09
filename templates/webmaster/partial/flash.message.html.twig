@@ -5,3 +5,10 @@
         {% endfor %}
     </div>
 {% endif %}
+{% if app.session.flashBag.peek('flash_message_error')|length > 0 %}
+    <div class="alert alert-warning" role="alert">
+        {% for message in app.flashes('flash_message_error') %}
+            <div>{{ message }}</div>
+        {% endfor %}
+    </div>
+{% endif %}

@@ -1,0 +1,44 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}
+    {% trans %}Payout method detail properties{% endtrans %}
+{% endblock %}
+
+{% block body %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-dark">
+            <li class="breadcrumb-item"><a href="{{ path('app_admin_pay_out_methods') }}">{% trans %}Payout methods{% endtrans %}</a></li>
+            <li class="breadcrumb-item">{{ payOutMethods.name }}</li>
+            <li class="breadcrumb-item active">{% trans %}Payout method detail properties{% endtrans %}</li>
+        </ol>
+    </nav>
+    {{ form_start(paymentDetailForm, {'attr': {'class': 'form-inline'}}) }}
+        {{ form_row(paymentDetailForm.detailProperty) }}
+        <button class="btn btn-info ml-1" type="submit">{% trans %}Create{% endtrans %}</button>
+    {{ form_end(paymentDetailForm) }}
+    {% if payOutMethods.paymentDetails %}
+        <div class="pt-2"></div>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th class="col-1" scope="col">#</th>
+                <th scope="col">{% trans %}Property name{% endtrans %}</th>
+                <th class="col-1" scope="col">{% trans %}Actions{% endtrans %}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for paymentDetail in payOutMethods.paymentDetails %}
+                <tr>
+                    <td>{{ paymentDetail.id }}</td>
+                    <td>{{ paymentDetail.detailProperty }}</td>
+                    <td>
+                        <a href="{{ path('app_admin_pay_out_methods_details_edit', {'id': paymentDetail.id}) }}" class="bi-pen"></a>
+                        <a href="#" class="bi-trash" data-toggle="modal" data-target="#confirmDialog" data-href="{{ path('app_admin_pay_out_methods_details_delete', {"id": paymentDetail.id}) }}" data-content="{% trans %}Are you sure that you want to delete payment property{% endtrans %}?"></a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}
+
