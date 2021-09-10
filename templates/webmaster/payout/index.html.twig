@@ -1,0 +1,49 @@
+{% extends 'webmaster/base.html.twig' %}
+
+{% block title %}{% trans %}Payouts{% endtrans %}{% endblock %}
+
+{% block body %}
+    <h1>{% trans %}Payouts{% endtrans %}</h1>
+    <p>
+        {% trans %}Your balance{% endtrans %}: ₴{{ app.user.balance }}
+    </p>
+    <div class="alert alert-primary">
+        {% trans %}You can make payout when your balance will be more than ₴500{% endtrans %}
+    </div>
+    {% if app.user.paymentSystems.count %}
+        <a href="{{ path('app_webmaster_payout_create') }}" class="btn btn-info">{% trans %}Create payout{% endtrans %}</a>
+    {% else %}
+        <a href="{{ path('app_webmaster_profile_payment', {'id': payoutFirstMethod.id}) }}">{% trans %}please set your even if one payment system{% endtrans %}</a>
+    {% endif %}
+    {% if payouts %}
+        <div class="pt-2"></div>
+        <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>{% trans %}Create Date{% endtrans %}</th>
+                <th>{% trans %}Sum{% endtrans %}</th>
+                <th>{% trans %}Payment system{% endtrans %}</th>
+                <th>{% trans %}Status{% endtrans %}</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for payout in payouts %}
+            <tr>
+                <td>{{ payout.createdAt|date("d.m.Y H:i", false) }}</td>
+                <td>₴ {{ payout.sum }}</td>
+                <td>{{ payout.paymentSystem.payoutMethod.name }} {{ payout.finalSum }}</td>
+                <td>
+                    {% if payout.status == 0 %}
+                        {% trans %}New{% endtrans %}
+                    {% elseif payout.status == 1%}
+                        {% trans %}Payed{% endtrans %}
+                    {% elseif payout.status == 2%}
+                        <span data-toggle="tooltip" title="{{ payout.reason }}">{% trans %}Reject{% endtrans %}</span>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+    {% endif %}
+{% endblock %}

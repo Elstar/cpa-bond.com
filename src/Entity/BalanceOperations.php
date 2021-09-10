@@ -21,7 +21,7 @@ class BalanceOperations
 
     /**
      * @ORM\ManyToOne(targetEntity=Lead::class, inversedBy="balanceOperations")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $lead;
 
@@ -34,6 +34,12 @@ class BalanceOperations
      * @ORM\Column(type="integer", options={"default":0, "unsigned":true, "comment": "0 - with lead, 1 - payOuts"})
      */
     private $operationType;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="balanceOperations")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
 
     public function getId(): ?int
     {
@@ -72,6 +78,18 @@ class BalanceOperations
     public function setOperationType(int $operationType): self
     {
         $this->operationType = $operationType;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

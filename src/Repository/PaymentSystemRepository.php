@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\PaymentSystem;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -19,32 +20,16 @@ class PaymentSystemRepository extends ServiceEntityRepository
         parent::__construct($registry, PaymentSystem::class);
     }
 
-    // /**
-    //  * @return PaymentSystem[] Returns an array of PaymentSystem objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function getUserPaymentSystems(User $user)
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
+        return $this->createQueryBuilder('ps')
+            ->leftJoin('ps.payoutMethod', 'pm')
+            ->addSelect('pm')
+            ->andWhere('ps.user = :user')
+            ->setParameter('user', $user)
+            ->andWhere('pm.active = 1')
             ->getQuery()
             ->getResult()
         ;
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?PaymentSystem
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

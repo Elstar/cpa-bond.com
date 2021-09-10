@@ -1,0 +1,27 @@
+{% extends 'webmaster/base.html.twig' %}
+
+{% block title %}{% trans %}Create payout{% endtrans %}{% endblock %}
+
+{% block body %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-dark">
+            <li class="breadcrumb-item"><a href="{{ path('app_webmaster_payout') }}">{% trans %}Payouts{% endtrans %}</a></li>
+            <li class="breadcrumb-item active">{% trans %}Create payout{% endtrans %}</li>
+        </ol>
+    </nav>
+    <h1>{% trans %}Create payout{% endtrans %}</h1>
+    {% if app.user.balance < 500 %}
+        <div class="alert alert-danger">
+            {% trans %}Your balance is less than ₴500{% endtrans %}
+        </div>
+    {% else %}
+        <p>
+            {% trans %}Your balance{% endtrans %}: ₴{{ app.user.balance }}
+        </p>
+    {% endif %}
+    {{ form_start(payoutForm) }}
+        {{ form_row(payoutForm.sum) }}
+        {{ form_row(payoutForm.paymentSystem) }}
+        <button type="submit" class="btn btn-info{% if app.user.balance < 500 %} disabled{% endif %}">{% trans %}Create{% endtrans %}</button>
+    {{ form_end(payoutForm) }}
+{% endblock %}

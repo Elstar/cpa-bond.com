@@ -107,11 +107,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $paymentSystems;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Payout::class, mappedBy="user")
+     */
+    private $payouts;
+
+    /**
+     * @ORM\OneToMany(targetEntity=BalanceOperations::class, mappedBy="user")
+     */
+    private $balanceOperations;
+
     public function __construct()
     {
         $this->streams = new ArrayCollection();
         $this->supportUsers = new ArrayCollection();
         $this->paymentSystems = new ArrayCollection();
+        $this->payouts = new ArrayCollection();
+        $this->balanceOperations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -222,6 +234,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setBalance(float $balance): self
     {
         $this->balance = $balance;
+
+        return $this;
+    }
+
+    public function decreaseBalance(int $sum): self
+    {
+        $this->balance -= $sum;
+
+        return $this;
+    }
+
+    public function increaseBalance(int $sum): self
+    {
+        $this->balance += $sum;
 
         return $this;
     }
@@ -424,6 +450,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($paymentSystem->getUser() === $this) {
                 $paymentSystem->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Payout[]
+     */
+    public function getPayouts(): Collection
+    {
+        return $this->payouts;
+    }
+
+    public function addPayout(Payout $payout): self
+    {
+        if (!$this->payouts->contains($payout)) {
+            $this->payouts[] = $payout;
+            $payout->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePayout(Payout $payout): self
+    {
+        if ($this->payouts->removeElement($payout)) {
+            // set the owning side to null (unless already changed)
+            if ($payout->getUser() === $this) {
+                $payout->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BalanceOperations[]
+     */
+    public function getBalanceOperations(): Collection
+    {
+        return $this->balanceOperations;
+    }
+
+    public function addBalanceOperation(BalanceOperations $balanceOperation): self
+    {
+        if (!$this->balanceOperations->contains($balanceOperation)) {
+            $this->balanceOperations[] = $balanceOperation;
+            $balanceOperation->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBalanceOperation(BalanceOperations $balanceOperation): self
+    {
+        if ($this->balanceOperations->removeElement($balanceOperation)) {
+            // set the owning side to null (unless already changed)
+            if ($balanceOperation->getUser() === $this) {
+                $balanceOperation->setUser(null);
             }
         }
 

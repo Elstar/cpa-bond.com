@@ -3,5 +3,18 @@
 {% block title %}CPA Bond Dashboard{% endblock %}
 
 {% block body %}
-    Dashboard
+    <div class="card" style="width: 18rem;">
+        <div class="card-header">
+            <h3>{% trans %}Balance{% endtrans %}</h3>
+        </div>
+        <div class="card-body">
+
+            <div class="dashboard-balance-body-img"></div>
+            <div class="dashboard-balance-body-content">
+                <h2 class="dash-balance-body__val">₴ {{ app.user.balance }}</h2>
+            </div>
+
+            <a href="#" class="btn btn-primary">{% trans %}Balance history{% endtrans %}</a>
+        </div>
+    </div>
 {% endblock %}
