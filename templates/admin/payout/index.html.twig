@@ -1,0 +1,102 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}{% trans %}Payouts{% endtrans %}{% endblock %}
+
+{% block body %}
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link{% if status == 0 %} active{% endif %}"
+               href="{{ path('app_admin_payout', {'status': 0}) }}">{% trans %}New{% endtrans %}</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link{% if status == 1 %} active{% endif %}"
+               href="{{ path('app_admin_payout', {'status': 1}) }}">{% trans %}Payed{% endtrans %}</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link{% if status == 2 %} active{% endif %}"
+               href="{{ path('app_admin_payout', {'status': 2}) }}">{% trans %}Reject{% endtrans %}</a>
+        </li>
+    </ul>
+    <div class="p-2"></div>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>{% trans %}Date{% endtrans %}</th>
+            <th>{% trans %}Webmaster{% endtrans %}</th>
+            <th>{% trans %}Payment system{% endtrans %}</th>
+            <th>{% trans %}Sum{% endtrans %}</th>
+            <th>
+                {% if status == 0 %}
+                    {% trans %}Actions{% endtrans %}
+                {% else %}
+                    {% trans %}Set date transaction{% endtrans %}
+                {% endif %}
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for payout in pagination %}
+            <tr>
+                <td>{{ payout.id }}</td>
+                <td>{{ payout.createdAt|date("d.m.Y H:i") }}</td>
+                <td>{{ payout.user.email }}</td>
+                <td>{{ payout.paymentSystem.payoutMethod.name }}</td>
+                <td>{{ payout.finalSum }}</td>
+                <td>
+                    {% if status == 0 %}
+                        <button type="button" data-sum="{{ payout.finalSum }}" data-payout-id="{{ payout.id }}" data-details="
+                        {% for paymentDetail in payout.paymentSystem.payoutMethod.paymentDetails %}
+                            {% set detail_key = 'detail_' ~ paymentDetail.id %}
+                            <div><strong>{{ paymentDetail.detailProperty }}</strong>: {{ payout.paymentSystem.details[detail_key] ?? '' }}</div>
+                        {% endfor %}
+                        " data- data-toggle="modal" data-target="#payoutDialog" class="btn btn-success btn-sm setPayout">{% trans %}Set payout{% endtrans %}</button>
+                    {% else %}
+                        {{ payout.updatedAt|date("d.m.Y H:i") }}
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">{% trans %}transaction not found{% endtrans %}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="modal" id="payoutDialog" tabindex="-1">
+        <div class="modal-dialog">
+            <form method="post">
+                <input type="hidden" id="payoutDialog-id" name="id" value="">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5  id="payoutDialog-title" class="modal-title">{% trans %}Set payout{% endtrans %}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div id="payoutDialog-body" class="modal-body">
+                        <div class="form-group">
+                            <label>{% trans %}Payout details{% endtrans %}</label>
+                            <div id="payoutDetails">
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>{% trans %}Sum form payout{% endtrans %}</label>
+                            <input id="payoutSumFinal" type="text" class="form-control bg-dark" name="sumFinal" value="" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>{% trans %}Reject comment{% endtrans %}</label>
+                            <input type="text" class="form-control" name="reason" aria-describedby="reasonHelp">
+                            <small id="reasonHelp" class="form-text text-muted">Set reason if you want reject payout.</small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-secondary" name="status" value="1">{% trans %}Confirm{% endtrans %}</button>
+                        <button type="submit" class="btn btn-secondary" name="status" value="2">{% trans %}Reject{% endtrans %}</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

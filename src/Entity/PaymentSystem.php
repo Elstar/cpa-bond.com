@@ -66,7 +66,8 @@ class PaymentSystem
 
     public function getDetails(): ?array
     {
-        $this->details = unserialize($this->details);
+        if (is_string($this->details))
+            $this->details = unserialize($this->details);
         return $this->details;
     }
 

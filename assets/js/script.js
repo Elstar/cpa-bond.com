@@ -17,4 +17,13 @@ $(document).ready(function() {
             $('#confirmDialog-href').attr('href', href);
         }
     });
+    $('.setPayout').click(function () {
+        let sum = $(this).attr('data-sum');
+        let details = $(this).attr('data-details');
+        let id = $(this).attr('data-payout-id');
+
+        $('#payoutDialog-id').val(id);
+        $('#payoutSumFinal').val(sum);
+        $('#payoutDetails').html(details);
+    });
 });
