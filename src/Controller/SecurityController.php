@@ -62,6 +62,7 @@ class SecurityController extends AbstractController
                 ->setTelegram($userModel->telegram)
                 ->setViber($userModel->viber)
                 ->setSkype($userModel->skype)
+                ->setPayOutAccess(0)
                 ->setApiToken(md5(uniqid('token_' . $userModel->email . rand(), true)));
             $em->persist($user);
             $em->flush();
