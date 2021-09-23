@@ -18,6 +18,7 @@
         "liip/imagine-bundle": "^2.6",
         "oneup/flysystem-bundle": "^4.0",
         "phpdocumentor/reflection-docblock": "^5.2",
+        "scienta/doctrine-json-functions": "^4.4",
         "sensio/framework-extra-bundle": "^6.1",
         "stof/doctrine-extensions-bundle": "^1.6",
         "symfony/asset": "5.3.*",

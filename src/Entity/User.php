@@ -85,7 +85,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\OneToOne(targetEntity=Postback::class, mappedBy="user")
      */
-    private $postbacks;
+    private ?Postback $postback;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="supportUsers")
@@ -345,27 +345,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Postback
      */
-    public function getPostbacks(): ?Postback
+    public function getPostback(): ?Postback
     {
-        return $this->postbacks;
+        return $this->postback;
     }
 
-    public function addPostbacks(Postback $postbacks): self
+    public function addPostback(Postback $postback): self
     {
-        if (!$this->postbacks->contains($postbacks)) {
-            $this->postbacks = $postbacks;
-            $postbacks->setUser($this);
+        if (!$this->postback->contains($postback)) {
+            $this->postback = $postback;
+            $postback->setUser($this);
         }
 
         return $this;
     }
 
-    public function removePostbacks(Postback $postbacks): self
+    public function removePostback(Postback $postback): self
     {
-        if ($this->postbacks->removeElement($postbacks)) {
+        if ($this->postback->removeElement($postback)) {
             // set the owning side to null (unless already changed)
-            if ($postbacks->getUser() === $this) {
-                $postbacks->setUser(null);
+            if ($postback->getUser() === $this) {
+                $postback->setUser(null);
             }
         }
 

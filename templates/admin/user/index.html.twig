@@ -1,0 +1,79 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}{% trans %}Users{% endtrans %}{% endblock %}
+
+{% block body %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-dark">
+            <li class="breadcrumb-item active">{% trans %}Users{% endtrans %}</li>
+        </ol>
+    </nav>
+    <div class="pt-2"></div>
+    <table class="table table-dark table-bordered table-hover" data-sortable>
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">{% trans %}Assigned manager{% endtrans %}</th>
+            <th scope="col">E-mail</th>
+            <th scope="col">{% trans %}Role{% endtrans %}</th>
+            <th scope="col">{% trans %}First name{% endtrans %}</th>
+            <th scope="col">{% trans %}Balance{% endtrans %}</th>
+            <th scope="col">{% trans %}Api Token{% endtrans %}</th>
+            <th scope="col">{% trans %}Activate{% endtrans %}</th>
+            <th scope="col">{% trans %}Access payout{% endtrans %}</th>
+            <th scope="col">{% trans %}Date of registration{% endtrans %}</th>
+            <th scope="col">{% trans %}Actions{% endtrans %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>
+                    {% if user.manager %}
+                        <a href="{{ path('app_admin_user_detail', {'id': user.manager.id}) }}">{{ user.manager.firstName }}</a>
+                    {% else %}
+                        <a href="{{ path('app_admin_user_detail', {'id': user.id}) }}">{% trans %}assign{% endtrans %}</a>
+                    {% endif %}
+                </td>
+                <td>{{ user.email }}</td>
+                <td>
+                    {% for role in user.roles %}
+                        {{ role }}{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                </td>
+                <td>{{ user.firstName }}</td>
+                <td>{{ user.balance }}₴</td>
+                <td>{{ user.apiToken }}</td>
+                <td>
+                    {% if user.activate %}
+                        <a class="badge badge-success" style="color: white;" href="{{ path('app_admin_user_change_activate', {'id': user.id}) }}">deactivate</a>
+                    {% else %}
+                        <a class="badge badge-danger" style="color: white;" href="{{ path('app_admin_user_change_activate', {'id': user.id}) }}">activate</a>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if user.payOutAccess %}
+                        <a class="badge badge-success" style="color: white;" href="{{ path('app_admin_user_change_activate', {'id': user.id}) }}">deactivate</a>
+                    {% else %}
+                        <a class="badge badge-danger" style="color: white;" href="{{ path('app_admin_user_change_activate', {'id': user.id}) }}">activate</a>
+                    {% endif %}
+                </td>
+                <td>{{ user.createdAt|date('d.m.Y H:i') }}</td>
+                <td>
+                    {% if is_granted("ROLE_ADMIN") %}
+                        <a class="bi-pen" href="{{ path('app_admin_user_detail', {'id': user.id}) }}"></a>
+                    {% endif %}
+                    {% if app.user.id != user.id %}
+                        <a class="bi-eye" href="{{ path('app_webmaster_dashboard', {'_switch_user': user.email}) }}" target="_blank"></a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="10">{% trans %}No have users{% endtrans %}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

@@ -4,9 +4,11 @@ namespace App\Repository;
 
 use App\Entity\Lead;
 use App\Entity\Stream;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Darsyn\IP\Version\Multi as IP;
+use DateTime;
 
 /**
  * @method Lead|null find($id, $lockMode = null, $lockVersion = null)
@@ -50,7 +52,7 @@ class LeadRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getLasLeadsByOfferAndPhoneCount(string $hash): int
+    public function getLastLeadsByOfferAndPhoneCount(string $hash): int
     {
         $qb = $this->createQueryBuilder('l');
         return (int) $qb->select($qb->expr()->count('l.id'))
@@ -60,5 +62,16 @@ class LeadRepository extends ServiceEntityRepository
             ->setParameter('date', new \DateTime('-1 hour'))
             ->getQuery()
             ->getSingleScalarResult();
+    }
+
+    public function getUserLeadsForPeriod(User $user, DateTime $dateFrom, DateTime $dateTo)
+    {
+        return $this->createQueryBuilder('l')
+            ->andWhere('l.user = :user')
+            ->andWhere('l.createdAt BETWEEN :dateFrom AND :dateTo')
+            ->setParameters(['dateFrom' => $dateFrom, 'dateTo' => $dateTo, 'user' => $user])
+            ->getQuery()
+            ->getResult()
+        ;
     }
 }

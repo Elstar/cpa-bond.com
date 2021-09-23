@@ -19,8 +19,11 @@
         "@a2lix/symfony-collection": "^0.4.0",
         "bootstrap": "^4.6.0",
         "bootstrap-icons": "^1.5.0",
+        "daterangepicker": "^3.1.0",
         "jquery": "^3.6.0",
         "jquery-confirm": "^3.3.4",
+        "js.sortable": "^0.8.0",
+        "moment": "^2.29.1",
         "popper.js": "^1.16.1",
         "select2": "^4.1.0-rc.0",
         "tinymce": "^5.8.2"

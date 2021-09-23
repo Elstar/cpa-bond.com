@@ -10,12 +10,15 @@ import './styles/app.css';
 
 // start the Stimulus application
 
+
 import './bootstrap';
 import { Tab, Dropdown, Tooltip, Modal} from 'bootstrap';
 import 'select2'
+import 'daterangepicker'
 
-require('bootstrap-icons/font/bootstrap-icons.css');
+require('js.sortable/js/sortable.min')
 require('./js/bootstrap_file_field')
 require('./js/tiny.js')
-require('./js/select2.js')
 require('./js/script.js')
+require('./js/select2.js')
+

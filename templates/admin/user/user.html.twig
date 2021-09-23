@@ -1,0 +1,18 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}{% trans %}Edit User{% endtrans %}{% endblock %}
+
+{% block body %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-dark">
+            <li class="breadcrumb-item"><a href="{{ path('app_admin_user') }}">{% trans %}Users{% endtrans %}</a></li>
+            <li class="breadcrumb-item active">{% trans %}Edit{% endtrans %}</li>
+        </ol>
+    </nav>
+    <div class="pt-2"></div>
+    {{ form_start(userForm) }}
+        {{ form_widget(userForm) }}
+        <button type="submit" class="btn btn-primary">{% trans %}Save{% endtrans %}</button>
+    {{ form_end(userForm) }}
+{% endblock %}
+

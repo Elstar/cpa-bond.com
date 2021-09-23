@@ -1,0 +1,109 @@
+{% extends 'webmaster/base.html.twig' %}
+
+{% block title %}{% trans %}Stats{% endtrans %}{% endblock %}
+
+{% block body %}
+    <form>
+        <div class="form-row">
+            <div class="form-group col-md-3">
+                <label>{% trans %}For period{% endtrans %}</label>
+                <div class="input-group dateRange">
+                    <input type="text" name="dateRange" class="form-control" value="{{ app.request.query.get('dateRange') ?? "now"|date('d.m.Y - d.m.Y') }}">
+                    <div class="input-group-append">
+                        <div class="input-group-text"><i class="bi-calendar"></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-md-3">
+                <label>{% trans %}By time{% endtrans %}</label>
+                <select name="by_time" class="form-control bg-dark">
+                    <option value="by_days"{% if app.request.query.get('by_time') == 'by_days' %} selected{% endif %}>
+                        {% trans %}by days{% endtrans %}
+                    </option>
+                    <option value="for_all_period"{% if app.request.query.get('by_time') == 'for_all_period' %} selected{% endif %}>
+                        {% trans %}for all period{% endtrans %}
+                    </option>
+                </select>
+            </div>
+            <div class="form-group col-md-3">
+                <label>{% trans %}Group{% endtrans %}</label>
+                <select name="group_by" class="form-control bg-dark">
+                    <option value=""></option>
+                    <option value="by_offer"{% if app.request.query.get('group_by') == 'by_offer' %} selected{% endif %}>
+                        {% trans %}by offer{% endtrans %}
+                    </option>
+                    <option value="by_stream"{% if app.request.query.get('group_by') == 'by_stream' %} selected{% endif %}>
+                        {% trans %}by stream{% endtrans %}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">{% trans %}Filter{% endtrans %}</button>
+    </form>
+    <div class="pt-2"></div>
+    <table class="table table-dark table-bordered table-hover">
+        <thead class="thead-dark">
+            <tr>
+                {% if byTime == 'by_days' %}
+                    <th scope="col">
+                        {% trans %}Date{% endtrans %}
+                    </th>
+                {% endif %}
+                {% if groupBy == 'by_offer' %}
+                    <th scope="col">{% trans %}Offer{% endtrans %}</th>
+                {% elseif groupBy == 'by_stream' %}
+                    <th scope="col">{% trans %}Stream{% endtrans %}</th>
+                {% endif %}
+                <th scope="col">{% trans %}Hits{% endtrans %}</th>
+                <th scope="col">{% trans %}Unique{% endtrans %}</th>
+                <th scope="col">{% trans %}Ratio{% endtrans %}</th>
+                <th scope="col">{% trans %}Leads{% endtrans %}</th>
+                <th scope="col">{% trans %}Leads ratio{% endtrans %}</th>
+                <th scope="col">{% trans %}New{% endtrans %}</th>
+                <th scope="col">{% trans %}Rejected{% endtrans %}</th>
+                <th scope="col">{% trans %}Accepted{% endtrans %}</th>
+                <th scope="col">{% trans %}Fake{% endtrans %}</th>
+                <th scope="col">{% trans %}CR{% endtrans %}</th>
+                <th scope="col">{% trans %}Charge{% endtrans %}</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% if stats %}
+            {% for key, data in stats %}
+                <tr>
+                    <td class="text-center align-middle" {% if data|length > 1 %} rowspan="{{ data|length }}"{% endif %}>{{ key }}</td>
+                    {% for keyStat, stat in data %}
+                        {% if loop.index > 1 %}
+                            <tr>
+                        {% endif %}
+                        {% if data|length > 1 %}<td>{{ keyStat }}</td>{% endif %}
+                        <td>{{ stat.hits }}</td>
+                        <td>{{ stat.uniq }}</td>
+                        <td>1:{{ stat.cr_pre_land_land }}</td>
+                        <td>{{ stat.leads }}</td>
+                        <td>1:{{ stat.cr_land_lead }}</td>
+                        <td>{{ stat.new_lead_count }}</td>
+                        <td>{{ stat.rejected_lead_count }}</td>
+                        <td>{{ stat.accepted_lead_count }}</td>
+                        <td>{{ stat.fake_lead_count }}</td>
+                        <td>{{ stat.cr_accept_lead }}</td>
+                        <td> - </td>
+                        </tr>
+                    {% endfor %}
+
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="
+                    {% if (byTime == 'by_days' and groupBy == '') or (byTime == 'for_all_period' and groupBy != '') %}
+                        12
+                    {% elseif byTime == 'by_days' and groupBy != '' %}
+                        13
+                    {% else %}
+                        11
+                    {% endif %}">{% trans %}Stats is empty{% endtrans %}</td>
+            </tr>
+        {% endif %}
+        </tbody>
+    </table>
+{% endblock %}

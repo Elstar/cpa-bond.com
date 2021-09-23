@@ -20,7 +20,7 @@ class Postback
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="postbacks")
+     * @ORM\OneToOne(targetEntity=User::class, inversedBy="postbacks")
      */
     private $user;
 

@@ -49,6 +49,18 @@
                     {% trans %}Payouts{% endtrans %}
                 </a>
             </li>
+            <li class="nav-item">
+                <a
+                        class="{{ 'app_webmaster_stats' in app.request.attributes.get('_route') ? 'nav-link active link-dark' : 'nav-link' }}"
+                        {% if 'app_webmaster_stats' in app.request.attributes.get('_route') %}
+                            aria-current="page"
+                        {% endif %}
+                        href="{{ path('app_webmaster_stats') }}"
+                >
+                    <i class="bi-bar-chart"></i>
+                    {% trans %}Stats{% endtrans %}
+                </a>
+            </li>
         </ul>
     </div>
 </nav>

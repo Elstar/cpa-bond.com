@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Stats;
+use App\Entity\User;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -19,32 +21,38 @@ class StatsRepository extends ServiceEntityRepository
         parent::__construct($registry, Stats::class);
     }
 
-    // /**
-    //  * @return Stats[] Returns an array of Stats objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function getStats(User $user, DateTime $dateFrom, DateTime $dateTo, string $groupBy = '')
     {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('s.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
+        $qb = $this->createQueryBuilder('s')
+            ->andWhere('s.day BETWEEN :date_from AND :date_to')
+            ->setParameters(['date_from' => $dateFrom, 'date_to' => $dateTo])
+            ->andWhere('s.user = :user')
+            ->setParameter('user', $user)
+            ->orderBy('s.day', 'ASC')
         ;
-    }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Stats
-    {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        switch ($groupBy) {
+            case 'by_offer':
+                $qb
+                    ->andWhere('s.offer <> :offer')
+                    ->setParameter('offer', 0)
+                ;
+                break;
+            case 'by_stream':
+                $qb
+                    ->andWhere('s.stream <> :stream')
+                    ->setParameter('stream', 0)
+                ;
+                break;
+            default:
+                $qb
+                    ->andWhere('s.stream = :stream')
+                    ->setParameter('stream', 0)
+                    ->andWhere('s.offer = :offer')
+                    ->setParameter('offer', 0)
+                ;
+                break;
+        }
+        return $qb->getQuery()->getResult();
     }
-    */
 }

@@ -1,6 +1,10 @@
 @import "~bootstrap";
 @import "mdb.dark.min.css";
 @import "~select2";
+@import "~daterangepicker";
+@import "date_range_picker.css";
+@import "~js.sortable/css/sortable-theme-bootstrap.css";
+@import "~bootstrap-icons/font/bootstrap-icons.css";
 .select2-results__options {
     background: #000000!important;
 }

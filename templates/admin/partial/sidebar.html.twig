@@ -61,18 +61,32 @@
                     {% trans %}Payout methods{% endtrans %}
                 </a>
             </li>
-            <li class="nav-item">
-                <a
-                        class="{{ 'admin_payout' in app.request.attributes.get('_route')  ? 'nav-link active link-dark' : 'nav-link' }}"
-                        {% if 'admin_payout' in app.request.attributes.get('_route') %}
-                            aria-current="page"
-                        {% endif %}
-                        href="{{ path('app_admin_payout') }}"
-                >
-                    <i class="bi-cash"></i>
-                    {% trans %}Payouts{% endtrans %}
-                </a>
-            </li>
+            {% if is_granted('ROLE_MANAGER') %}
+                <li class="nav-item">
+                    <a
+                            class="{{ 'admin_payout' in app.request.attributes.get('_route')  ? 'nav-link active link-dark' : 'nav-link' }}"
+                            {% if 'admin_payout' in app.request.attributes.get('_route') %}
+                                aria-current="page"
+                            {% endif %}
+                            href="{{ path('app_admin_payout') }}"
+                    >
+                        <i class="bi-cash"></i>
+                        {% trans %}Payouts{% endtrans %}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a
+                            class="{{ 'admin_user' in app.request.attributes.get('_route')  ? 'nav-link active link-dark' : 'nav-link' }}"
+                            {% if 'admin_user' in app.request.attributes.get('_route') %}
+                                aria-current="page"
+                            {% endif %}
+                            href="{{ path('app_admin_user') }}"
+                    >
+                        <i class="bi-people"></i>
+                        {% trans %}Users{% endtrans %}
+                    </a>
+                </li>
+            {% endif %}
         </ul>
     </div>
 </nav>

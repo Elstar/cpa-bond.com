@@ -96,6 +96,11 @@ class Stats
      */
     private $fakeLeadCount;
 
+    /**
+     * @ORM\Column(type="integer", options={"unsigned":true, "default":0})
+     */
+    private $leads;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -265,6 +270,18 @@ class Stats
     public function setPreLandingPageUniqueVisits(?int $preLandingPageUniqueVisits): self
     {
         $this->preLandingPageUniqueVisits = $preLandingPageUniqueVisits;
+
+        return $this;
+    }
+
+    public function getLeads(): ?int
+    {
+        return $this->leads;
+    }
+
+    public function setLeads(int $leads): self
+    {
+        $this->leads = $leads;
 
         return $this;
     }

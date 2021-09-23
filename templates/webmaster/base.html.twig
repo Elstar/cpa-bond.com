@@ -4,14 +4,17 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{% block title %}CPA Bond{% endblock %}</title>
-        {# Run `composer require symfony/webpack-encore-bundle`
-           and uncomment the following Encore helpers to start using Symfony UX #}
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
         {% endblock %}
     </head>
     <body>
         {% include 'webmaster/partial/header.html.twig' %}
+        {% if is_granted('ROLE_PREVIOUS_ADMIN') %}
+            <div class="alert alert-warning">
+                Имперсонализация включена. <a href="{{ path('app_admin_user', {'_switch_user' : '_exit'}) }}">выйти</a>
+            </div>
+        {% endif %}
         <div class="container-fluid">
             <div class="row">
                 {% include 'webmaster/partial/sidebar.html.twig' %}

@@ -58,6 +58,7 @@ function setLeads(array $stats, array $lead): array
         default:
             break;
     }
+    $stats['leads']++;
 
     return $stats;
 }
@@ -70,8 +71,7 @@ function setStatInsert(int $user_id, string $yesterday, array $stat, int $stream
         'offer_id' => $offer_id,
         'day' => $yesterday
     ];
-    $insert = array_merge($insert, $stat);
-    return $insert;
+    return array_merge($insert, $stat);
 }
 
 $today = date("Y-m-d H:i:s", mktime(0, 0, 0, date('m'), date('d'), date('Y')));
@@ -130,7 +130,6 @@ while ($visitor = $dayStats->fetch()) {
 }
 
 if (!empty($stats)) {
-
     foreach ($stats as $user_id => $stat) {
         $leads = pdoHelper::getInstance()->selectRows("SELECT * FROM `lead` WHERE (user_id=?) AND (created_at BETWEEN ? AND ?)",
             [$user_id, $yesterday, $today]);
@@ -152,14 +151,14 @@ if (!empty($stats)) {
             }
         }
         $insertStats = [];
-        $insertStats[] = setStatInsert($user_id, $yesterday, $stat['all']);
-        if (!empty($stat['streams'])) {
-            foreach ($stat['streams'] as $stream_id => $stream) {
+        $insertStats[] = setStatInsert($user_id, $yesterday, $stats[$user_id]['all']);
+        if (!empty($stats[$user_id]['streams'])) {
+            foreach ($stats[$user_id]['streams'] as $stream_id => $stream) {
                 $insertStats[] = setStatInsert($user_id, $yesterday, $stream, $stream_id);
             }
         }
-        if (!empty($stat['offers'])) {
-            foreach ($stat['offers'] as $offer_id => $offer) {
+        if (!empty($stats[$user_id]['offers'])) {
+            foreach ($stats[$user_id]['offers'] as $offer_id => $offer) {
                 $insertStats[] = setStatInsert($user_id, $yesterday, $offer, 0, $offer_id);
             }
         }

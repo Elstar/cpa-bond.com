@@ -3,16 +3,19 @@
 namespace App\Controller\Admin;
 
 use App\Entity\BalanceOperations;
-use App\Entity\Payout;
 use App\Repository\PayoutRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @IsGranted("ROLE_MANAGER")
+ */
 class PayoutController extends AbstractController
 {
     /**

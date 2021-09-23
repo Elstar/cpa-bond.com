@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\DayStats;
+use App\Entity\User;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -19,32 +21,13 @@ class DayStatsRepository extends ServiceEntityRepository
         parent::__construct($registry, DayStats::class);
     }
 
-    // /**
-    //  * @return DayStats[] Returns an array of DayStats objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function getStatsByUser(User $user)
     {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('d.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
+        $qb = $this->createQueryBuilder('s')
+            ->andWhere('s.user = :user')
+            ->setParameter('user', $user)
         ;
-    }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?DayStats
-    {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $qb->getQuery()->getResult();
     }
-    */
 }

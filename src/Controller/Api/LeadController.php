@@ -104,7 +104,7 @@ class LeadController extends AbstractController
                             'message' => 'To much orders from one IP'
                         ];
                     }
-                    if ($this->leadRepository->getLasLeadsByOfferAndPhoneCount($hash) > 10) {
+                    if ($this->leadRepository->getLastLeadsByOfferAndPhoneCount($hash) > 10) {
                         $dataError = [
                             'message' => 'Duplicated lead in system'
                         ];
