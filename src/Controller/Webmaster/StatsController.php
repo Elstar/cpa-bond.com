@@ -49,6 +49,7 @@ class StatsController extends AbstractController
         if (!empty($statsToArray)) {
             $sum = $statsBuilder->calcSum($statsToArray);
         }
+        //dd($statsToArray);
 
         return $this->render('webmaster/stats/index.html.twig', [
             'stats' => $statsToArray,

@@ -76,7 +76,7 @@
                         {% if loop.index > 1 %}
                             <tr>
                         {% endif %}
-                        {% if data|length > 1 %}<td>{{ keyStat }}</td>{% endif %}
+                        {% if not numeric(keyStat) %}<td>{{ keyStat }}</td>{% endif %}
                         <td>{{ stat.hits }}</td>
                         <td>{{ stat.uniq }}</td>
                         <td>1:{{ stat.cr_pre_land_land }}</td>
