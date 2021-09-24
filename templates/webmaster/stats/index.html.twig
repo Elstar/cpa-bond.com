@@ -64,7 +64,7 @@
                 <th scope="col">{% trans %}Accepted{% endtrans %}</th>
                 <th scope="col">{% trans %}Fake{% endtrans %}</th>
                 <th scope="col">{% trans %}CR{% endtrans %}</th>
-                <th scope="col">{% trans %}Charge{% endtrans %}</th>
+                <th scope="col">{% trans %}Payoff{% endtrans %}</th>
             </tr>
         </thead>
         <tbody>
@@ -90,8 +90,25 @@
                         <td> - </td>
                         </tr>
                     {% endfor %}
-
             {% endfor %}
+            {% if sum %}
+                <tr>
+                    <td class="text-center align-middle bold" {% if groupBy and byTime == 'by_days'  %} colspan="2"{% endif %}>
+                        {% trans %}Sum{% endtrans %}
+                    </td>
+                    <td>{{ sum.hits }}</td>
+                    <td>{{ sum.uniq }}</td>
+                    <td>1:{{ sum.cr_pre_land_land }}</td>
+                    <td>{{ sum.leads }}</td>
+                    <td>1:{{ sum.cr_land_lead }}</td>
+                    <td>{{ sum.new_lead_count }}</td>
+                    <td>{{ sum.rejected_lead_count }}</td>
+                    <td>{{ sum.accepted_lead_count }}</td>
+                    <td>{{ sum.fake_lead_count }}</td>
+                    <td>{{ sum.cr_accept_lead }}</td>
+                    <td> - </td>
+                </tr>
+            {% endif %}
         {% else %}
             <tr>
                 <td colspan="

@@ -101,6 +101,11 @@ class Stats
      */
     private $leads;
 
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $payoff;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -282,6 +287,18 @@ class Stats
     public function setLeads(int $leads): self
     {
         $this->leads = $leads;
+
+        return $this;
+    }
+
+    public function getPayoff(): ?float
+    {
+        return $this->payoff;
+    }
+
+    public function setPayoff(?float $payoff): self
+    {
+        $this->payoff = $payoff;
 
         return $this;
     }

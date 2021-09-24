@@ -35,7 +35,7 @@ class ProfileController extends AbstractController
          * @var User $user
          */
         $user = $this->getUser();
-        $postBacks = $user->getPostbacks();
+        $postBacks = $user->getPostback();
         if (!$postBacks) {
             $postBacks = new Postback();
         }

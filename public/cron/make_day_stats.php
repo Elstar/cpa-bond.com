@@ -18,7 +18,8 @@ $base = [
     'new_lead_count' => 0,
     'rejected_lead_count' => 0,
     'accepted_lead_count' => 0,
-    'fake_lead_count' => 0
+    'fake_lead_count' => 0,
+    'payoff' => 0
 ];
 
 function setVisits(array $stats, array $visitor): array
@@ -39,7 +40,7 @@ function setVisits(array $stats, array $visitor): array
     return $stats;
 }
 
-function setLeads(array $stats, array $lead): array
+function setLeads(array $stats, array $lead, float $sum = 0): array
 {
 
     switch ($lead['status']) {
@@ -51,6 +52,7 @@ function setLeads(array $stats, array $lead): array
             break;
         case 2:
             $stats['accepted_lead_count']++;
+            $stats['payoff'] += $sum;
             break;
         case 3:
             $stats['fake_lead_count']++;
@@ -88,7 +90,6 @@ $copyAllDayStats = [];
 $AllDayStatsIterator = 0;
 
 while ($visitor = $dayStats->fetch()) {
-
     $user_id = $visitor['user_id'];
     $stream_id = (int)$visitor['stream_id'];
     $copyAllDayStats[] = $visitor;
@@ -131,22 +132,26 @@ while ($visitor = $dayStats->fetch()) {
 
 if (!empty($stats)) {
     foreach ($stats as $user_id => $stat) {
-        $leads = pdoHelper::getInstance()->selectRows("SELECT * FROM `lead` WHERE (user_id=?) AND (created_at BETWEEN ? AND ?)",
+        $leads = pdoHelperSlave::getInstance()->selectRows("SELECT * FROM `lead` WHERE (user_id=?) AND (created_at BETWEEN ? AND ?)",
             [$user_id, $yesterday, $today]);
         if (!empty($leads)) {
             foreach ($leads as $lead) {
-                $stats[$user_id]['all'] = setLeads($stats[$user_id]['all'], $lead);
+                $sum = 0;
+                if ($lead['status'] == 2) {
+                    $sum = (float)pdoHelperSlave::getInstance()->selectVar("SELECT SUM(sum) FROM balance_operations WHERE lead_id=?", [$lead['id']]);
+                }
+                $stats[$user_id]['all'] = setLeads($stats[$user_id]['all'], $lead, $sum);
                 if ($lead['stream_id']) {
                     if (!isset($stats[$user_id]['streams'][$lead['stream_id']])) {
                         $stats[$user_id]['streams'][$lead['stream_id']] = $base;
                     }
-                    $stats[$user_id]['streams'][$lead['stream_id']] = setLeads($stats[$user_id]['streams'][$lead['stream_id']], $lead);
+                    $stats[$user_id]['streams'][$lead['stream_id']] = setLeads($stats[$user_id]['streams'][$lead['stream_id']], $lead, $sum);
                 }
                 if ($lead['offer_id']) {
                     if (!isset($stats[$user_id]['offers'][$lead['offer_id']])) {
                         $stats[$user_id]['offers'][$lead['offer_id']] = $base;
                     }
-                    $stats[$user_id]['offers'][$lead['offer_id']] = setLeads($stats[$user_id]['offers'][$lead['offer_id']], $lead);
+                    $stats[$user_id]['offers'][$lead['offer_id']] = setLeads($stats[$user_id]['offers'][$lead['offer_id']], $lead, $sum);
                 }
             }
         }

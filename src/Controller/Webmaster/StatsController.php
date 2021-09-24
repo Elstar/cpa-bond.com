@@ -34,7 +34,10 @@ class StatsController extends AbstractController
 
         if ($today <= $dateTo) {
             $dayStats = $dayStatsRepository->getStatsByUser($this->getUser());
-            $statsToArray = $statsBuilder->buildTodayStats($dayStats, $groupBy, $byTime);
+
+            if (!empty($dayStats)) {
+                $statsToArray = $statsBuilder->buildTodayStats($dayStats, $groupBy, $byTime);
+            }
         }
 
         $stats = $statsRepository->getStats($this->getUser(), $dateFrom, $dateTo, $groupBy);
@@ -49,7 +52,6 @@ class StatsController extends AbstractController
         if (!empty($statsToArray)) {
             $sum = $statsBuilder->calcSum($statsToArray);
         }
-        //dd($statsToArray);
 
         return $this->render('webmaster/stats/index.html.twig', [
             'stats' => $statsToArray,

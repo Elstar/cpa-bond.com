@@ -30,6 +30,10 @@ class StatsBuilder
              */
             $this->setPrimaryStatsKey($stat, $groupBy, $separateBy);
 
+            if (!isset($result[$this->primaryKey][$this->groupKey])) {
+                $this->setZero($result[$this->primaryKey][$this->groupKey]);
+            }
+
             if ($stat->getPreLandingUniqueVisits()) {
                 $result[$this->primaryKey][$this->groupKey]['uniq'] += $stat->getPreLandingUniqueVisits();
                 $result[$this->primaryKey][$this->groupKey]['hits'] += $stat->getPreLandingVisits();
@@ -46,6 +50,7 @@ class StatsBuilder
             $result[$this->primaryKey][$this->groupKey]['rejected_lead_count'] += $stat->getRejectedLeadCount();
             $result[$this->primaryKey][$this->groupKey]['accepted_lead_count'] += $stat->getAcceptedLeadCount();
             $result[$this->primaryKey][$this->groupKey]['fake_lead_count'] += $stat->getFakeLeadCount();
+            $result[$this->primaryKey][$this->groupKey]['payoff'] += $stat->getPayoff();
         }
 
         return $this->calcCr($result);
@@ -62,36 +67,19 @@ class StatsBuilder
              * @var DayStats $stat
              */
             $this->setPrimaryStatsKey($stat, $groupBy, $separateBy);
-            if (isset($result[$this->primaryKey][$this->groupKey]['uniq'])) {
-                $result[$this->primaryKey][$this->groupKey]['uniq']++;
-                $result[$this->primaryKey][$this->groupKey]['hits'] += $stat->getVisits();
-            } else {
-                $result[$this->primaryKey][$this->groupKey]['uniq'] = 1;
-                $result[$this->primaryKey][$this->groupKey]['hits'] = $stat->getVisits();
-                $result[$this->primaryKey][$this->groupKey]['leads'] = 0;
-                $result[$this->primaryKey][$this->groupKey]['new_lead_count'] = 0;
-                $result[$this->primaryKey][$this->groupKey]['rejected_lead_count'] = 0;
-                $result[$this->primaryKey][$this->groupKey]['accepted_lead_count'] = 0;
-                $result[$this->primaryKey][$this->groupKey]['fake_lead_count'] = 0;
 
-                $result[$this->primaryKey][$this->groupKey]['pre_landing'] = 0;
-                $result[$this->primaryKey][$this->groupKey]['landing'] = 0;
-
+            if (!isset($result[$this->primaryKey][$this->groupKey])) {
+                $this->setZero($result[$this->primaryKey][$this->groupKey]);
             }
+
+            $result[$this->primaryKey][$this->groupKey]['uniq']++;
+            $result[$this->primaryKey][$this->groupKey]['hits'] += $stat->getVisits();
 
             if ($stat->getPreLandingVisits()) {
-                if (isset($result[$this->primaryKey][$this->groupKey]['pre_landing'])) {
-                    $result[$this->primaryKey][$this->groupKey]['pre_landing']++;
-                } else {
-                    $result[$this->primaryKey][$this->groupKey]['pre_landing'] = 1;
-                }
+                $result[$this->primaryKey][$this->groupKey]['pre_landing']++;
             }
             if ($stat->getLandingVisits() || $stat->getPreLandingPageVisits()) {
-                if (isset($result[$this->primaryKey][$this->groupKey]['landing'])) {
-                    $result[$this->primaryKey][$this->groupKey]['landing']++;
-                } else {
-                    $result[$this->primaryKey][$this->groupKey]['landing'] = 1;
-                }
+                $result[$this->primaryKey][$this->groupKey]['landing']++;
             }
 
         }
@@ -113,6 +101,7 @@ class StatsBuilder
                         break;
                     case 2:
                         $result[$this->primaryKey][$this->groupKey]['accepted_lead_count']++;
+                        $result[$this->primaryKey][$this->groupKey]['payoff'] += $lead->getStream()->getSum();
                         break;
                     case 3:
                         $result[$this->primaryKey][$this->groupKey]['fake_lead_count']++;
@@ -127,19 +116,7 @@ class StatsBuilder
 
     public function calcSum(array $result): array
     {
-        $sum = ['sum' => [
-            0 => [
-                'uniq' => 0,
-                'hits' => 0,
-                'pre_landing' => 0,
-                'landing' => 0,
-                'leads' => 0,
-                'new_lead_count' => 0,
-                'rejected_lead_count' => 0,
-                'accepted_lead_count' => 0,
-                'fake_lead_count' => 0
-            ]
-        ]];
+        $this->setZero($sum['sum'][0]);
         foreach ($result as $primaryKey => $primary) {
             foreach ($primary as $groupKey => $row) {
                 $sum['sum'][0]['uniq'] += $row['uniq'];
@@ -153,9 +130,11 @@ class StatsBuilder
                 $sum['sum'][0]['rejected_lead_count'] += $row['rejected_lead_count'];
                 $sum['sum'][0]['accepted_lead_count'] += $row['accepted_lead_count'];
                 $sum['sum'][0]['fake_lead_count'] += $row['fake_lead_count'];
+                $sum['sum'][0]['payoff'] += $row['payoff'];
             }
         }
-        return $this->calcCr($sum);
+        $sum = $this->calcCr($sum);
+        return $sum['sum'][0];
     }
 
     /**
@@ -176,7 +155,11 @@ class StatsBuilder
                 $primaryKey = $stat->getCreatedAt()->format('d.m.Y');
             }
             if ($groupBy == 'by_offer') {
-                $groupKey = $stat->getStream()->getOffer()->getName();
+                if ($stat instanceof Stats) {
+                    $groupKey = $stat->getOffer()->getName();
+                } else {
+                    $groupKey = $stat->getStream()->getOffer()->getName();
+                }
             } elseif ($groupBy == 'by_stream') {
                 $groupKey = $stat->getStream()->getName();
             }
@@ -207,5 +190,19 @@ class StatsBuilder
         }
 
         return $result;
+    }
+
+    private function setZero(&$result)
+    {
+        $result['uniq'] = 0;
+        $result['hits'] = 0;
+        $result['leads'] = 0;
+        $result['new_lead_count'] = 0;
+        $result['rejected_lead_count'] = 0;
+        $result['accepted_lead_count'] = 0;
+        $result['fake_lead_count'] = 0;
+        $result['landing'] = 0;
+        $result['pre_landing'] = 0;
+        $result['payoff'] = 0;
     }
 }
