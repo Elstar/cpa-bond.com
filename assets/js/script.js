@@ -3,7 +3,7 @@ import moment from "moment";
 
 $(document).ready(function() {
     $('[data-toggle="tooltip"]').tooltip();
-    $('a.bi-trash').click(function () {
+    $('a.bi-trash,a.confirm-danger').click(function () {
         let title = $(this).attr('data-title');
         let href = $(this).attr('data-href');
         let body = $(this).attr('data-content');

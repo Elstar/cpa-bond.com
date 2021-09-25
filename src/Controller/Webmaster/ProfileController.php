@@ -137,4 +137,23 @@ class ProfileController extends AbstractController
             throw new FileException('File order.php not found');
         }
     }
+
+    /**
+     * @Route({"uk": "/profile/refreshToken", "ru": "/ru/profile/refreshToken", "en": "/en/profile/refreshToken"}, name="app_webmaster_refresh_token")
+     */
+    public function refreshToken(EntityManagerInterface $em): Response
+    {
+        /**
+         * @var User $user
+         */
+        $user = $this->getUser();
+
+        $user->setApiToken(md5(uniqid('token_' . $user->getEmail() . rand(), true)));
+
+        $em->persist($user);
+        $em->flush();
+
+        $this->addFlash('flash_message', 'You successfully refresh Api Token');
+        return $this->redirectToRoute('app_webmaster_profile');
+    }
 }

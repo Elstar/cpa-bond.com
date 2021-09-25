@@ -6,24 +6,38 @@
     <h1>{% trans %}Profile{% endtrans %}</h1>
     <table class="table table-dark">
         <tr>
-            <td><strong>Email</strong></td>
+            <td class="col-1"><strong>Email</strong></td>
             <td>{{ app.user.email }}</td>
         </tr>
         <tr>
-            <td><strong>{% trans %}Balance{% endtrans %}</strong></td>
+            <td class="col-1"><strong>{% trans %}Balance{% endtrans %}</strong></td>
             <td>₴ {{ app.user.balance }}</td>
         </tr>
     </table>
-    <h2>{% trans %}Payment system{% endtrans %}</h2>
-    <a href="{{ path('app_webmaster_profile_payment', {'id': payoutFirstMethod.id}) }}">{% trans %}payment systems{% endtrans %}</a>
+    {% if payoutFirstMethod %}
+        <h2>{% trans %}Payment system{% endtrans %}</h2>
+        <a href="{{ path('app_webmaster_profile_payment', {'id': payoutFirstMethod.id}) }}">{% trans %}payment systems{% endtrans %}</a>
+    {% endif %}
     <h2>Api</h2>
     <table class="table table-dark">
         <tr>
-            <td><strong>{% trans %}Token{% endtrans %}</strong></td>
-            <td>{{ app.user.apiToken }}</td>
+            <td class="col-1"><strong>{% trans %}Token{% endtrans %}</strong></td>
+            <td>
+                {{ app.user.apiToken }}
+                <a
+                        href="#"
+                        class="badge badge-warning confirm-danger"
+                        data-toggle="modal"
+                        data-target="#confirmDialog"
+                        data-href="{{ path('app_webmaster_refresh_token') }}"
+                        data-content="{% trans %}Are you sure that you want to refresh token{% endtrans %}?"
+                >
+                    {% trans %}Refresh token{% endtrans %}
+                </a>
+            </td>
         </tr>
         <tr>
-            <td><strong>{% trans %}Download{% endtrans %}</strong></td>
+            <td class="col-1"><strong>{% trans %}Download{% endtrans %}</strong></td>
             <td>
                 {% trans %}
                     Dear partner! If you want to drive traffic to the API using your landing page and transit, please read the attached instructions below.
@@ -31,13 +45,13 @@
             </td>
         </tr>
         <tr>
-            <td><strong>{% trans %}Instruction{% endtrans %}</strong></td>
+            <td class="col-1"><strong>{% trans %}Instruction{% endtrans %}</strong></td>
             <td>
                 <a href="https://docs.google.com/document/d/1Vp2sxGE1pkqjVLYX40nShF101oO24tLdqEcyRVKBHIU/edit?usp=sharing" target="_blank">{% trans %}Open instruction{% endtrans %}</a>
             </td>
         </tr>
         <tr>
-            <td><strong>{% trans %}Download{% endtrans %}</strong></td>
+            <td class="col-1"><strong>{% trans %}Download{% endtrans %}</strong></td>
             <td>
                 <a href="{{ path('app_webmaster_download_order_file') }}" target="_blank">order.php</a>
             </td>

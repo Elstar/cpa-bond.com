@@ -31,7 +31,7 @@
                 </td>
                 <td>
                     <a href="{{ path('app_webmaster_stream_edit', {"id": stream.id}) }}" class="bi-pen"></a>
-                    <a href="#" class="bi-trash" data-toggle="modal" data-target="#confirmDialog" data-href="{{ path('app_webmaster_stream_delete', {"id": stream.id}) }}" data-content="{% trans %}Are you sure that you want to delete stream{% endtrans %}?"></a>
+                    <a href="#" class="bi-trash confirm-danger" data-toggle="modal" data-target="#confirmDialog" data-href="{{ path('app_webmaster_stream_delete', {"id": stream.id}) }}" data-content="{% trans %}Are you sure that you want to delete stream{% endtrans %}?"></a>
                 </td>
             </tr>
         {% endfor %}

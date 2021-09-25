@@ -186,9 +186,21 @@ class OfferFormType extends AbstractType
                     'class' => 'js-example-basic-multiple'
                 ]
             ])
-            ->add('geoInfo')
-            ->add('sourceTraffic')
-            ->add('forbiddenSources')
+            ->add('geoInfo', null, [
+                'attr' => [
+                    'class' => 'textarea'
+                ]
+            ])
+            ->add('sourceTraffic', null, [
+                'attr' => [
+                    'class' => 'textarea'
+                ]
+            ])
+            ->add('forbiddenSources', null, [
+                'attr' => [
+                    'class' => 'textarea'
+                ]
+            ])
             ->add('paySum')
             ->add('image', FileType::class, [
                 'required' => false,

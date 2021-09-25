@@ -61,6 +61,18 @@
                     {% trans %}Payout methods{% endtrans %}
                 </a>
             </li>
+            <li class="nav-item">
+                <a
+                        class="{{ 'admin_translate' in app.request.attributes.get('_route')  ? 'nav-link active link-dark' : 'nav-link' }}"
+                        {% if 'admin_translate' in app.request.attributes.get('_route') %}
+                            aria-current="page"
+                        {% endif %}
+                        href="{{ path('app_admin_translate') }}"
+                >
+                    <i class="bi-book"></i>
+                    {% trans %}Translation{% endtrans %}
+                </a>
+            </li>
             {% if is_granted('ROLE_MANAGER') %}
                 <li class="nav-item">
                     <a

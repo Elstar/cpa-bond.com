@@ -1,0 +1,17 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}{% trans %}Translate{% endtrans %}{% endblock %}
+
+{% block body %}
+    <ul class="nav nav-tabs">
+        {% for localeRow in locales %}
+            {% if localeRow != baseTranslateLanguage %}
+                <li class="nav-item">
+                    <a class="nav-link{% if localeRow == locale %} active{% endif %}"
+                       href="{{ path('app_admin_translate', {'locale': localeRow}) }}">{{ localeRow }}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+    {{ form(translateForm) }}
+{% endblock %}
