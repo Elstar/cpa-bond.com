@@ -30,6 +30,7 @@ class UserFixtures extends BaseFixtures
                 ->setPassword($this->passwordHasher->hashPassword($user,'111111'))
                 ->setPayOutAccess(0)
                 ->setApiToken(md5(uniqid('token_sergiy.dmb@gmail.com' . mt_rand(), true)))
+                ->setCountRequestsPerTime(0)
             ;
         });
 

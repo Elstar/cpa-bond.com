@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use GeoIp2\Database\Reader;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,7 +30,6 @@ class LeadController extends AbstractController
      */
     public function __construct(LeadRepository $leadRepository)
     {
-
         $this->geoIp = new Reader(__DIR__ . '/../../geoIp/GeoIP2-Country.mmdb');
         $this->leadRepository = $leadRepository;
     }
@@ -38,26 +38,40 @@ class LeadController extends AbstractController
      * @Route("/api/v1/new-lead", name="api_order")
      * @IsGranted("ROLE_USER")
      */
-    public function create(Request $request, StreamRepository $streamRepository, EntityManagerInterface $em): Response
-    {
+    public function create(
+        Request $request,
+        StreamRepository $streamRepository,
+        EntityManagerInterface $em,
+        ContainerInterface $container
+    ): Response {
         $dataError = [];
         $dataSuccess = [];
         $status = 200;
+
         /**
          * @var User $user
          */
         $user = $this->getUser();
-        if ($request->getMethod() != 'POST') {
+
+        //Check requests limit (per minute)
+        if ($user->getCountRequestsPerTime() > $container->getParameter('api_count_requests_per_time_limit')) {
             $dataError = [
-                'message' => 'You need POST method for order create '
+                'message' => 'You have request limit, try bit later'
             ];
-            $status = Response::HTTP_METHOD_NOT_ALLOWED;
+            return new JsonResponse($dataError, Response::HTTP_LOCKED);
         }
 
-        if (0 === strpos($request->headers->get('Content-Type'), 'application/json')) {
+        if (empty($dataError) && $request->getMethod() != 'POST') {
+            $dataError = [
+                'message' => 'You need POST method for order create'
+            ];
+            $status = Response::HTTP_CONFLICT;
+        }
+
+        if (empty($dataError) && 0 === strpos($request->headers->get('Content-Type'), 'application/json')) {
             $data = json_decode($request->getContent(), true);
             $ip = IP::factory($data['ip']);
-        } else {
+        } elseif (empty($dataError)) {
             $dataError = [
                 'message' => 'You need use application/json Content-Type for order create'
             ];
@@ -73,7 +87,7 @@ class LeadController extends AbstractController
                 $status = Response::HTTP_BAD_REQUEST;
             } else {
                 /**
-                 * @var Stream $stream;
+                 * @var Stream $stream ;
                  */
 
                 $stream = $streamRepository->findOneBy(['uniqueId' => trim($data['stream_id'])]);
@@ -123,8 +137,7 @@ class LeadController extends AbstractController
                         ->setPayStatus(0)
                         ->setUniqueId()
                         ->setGatewayStatus(0)
-                        ->setUser($user)
-                    ;
+                        ->setUser($user);
                     if (!empty($data['ua'])) {
                         $lead->setUa($data['ua']);
                     }
@@ -150,7 +163,11 @@ class LeadController extends AbstractController
                         $lead->setReferer($data['referer']);
                     }
                     $lead->setFullRequestData(serialize($data));
+
+                    $user->setCountRequestsPerTime($user->getCountRequestsPerTime() + 1);
+
                     $em->persist($lead);
+                    $em->persist($user);
                     $em->flush();
                     $dataSuccess = [
                         'lead_id' => $lead->getUniqueId(),
@@ -160,7 +177,7 @@ class LeadController extends AbstractController
                     $status = Response::HTTP_BAD_REQUEST;
                 }
             }
-        } else {
+        } elseif (empty($dataError)) {
             $dataError = [
                 'message' => 'Empty data'
             ];
@@ -177,10 +194,18 @@ class LeadController extends AbstractController
 
     /**
      * @Route("/api/v1/get-lead/{uniqueId}", name="api_order_get")
+     * @IsGranted("ROLE_USER")
      */
-    public function getLead(?Lead $lead, Request $request): Response
+    public function getLead(?Lead $lead, Request $request, EntityManagerInterface $em): Response
     {
         $status = 200;
+        $dataSuccess = [];
+
+        /**
+         * @var User $user
+         */
+        $user = $this->getUser();
+
         if ($request->getMethod() != 'GET') {
             $dataError = [
                 'message' => 'You need GET method for get lead'
@@ -194,28 +219,36 @@ class LeadController extends AbstractController
             ];
             $status = Response::HTTP_BAD_REQUEST;
         } else {
-            $ip = $lead->getIp();
-            /**
-             * @var IP $ip
-             */
-            $dataSuccess = [
-                'id' => $lead->getUniqueId(),
-                'stream_id' => $lead->getStream()->getUniqueId(),
-                'geo' => $lead->getGeo()->getName(),
-                'ip' => $ip->getDotAddress(),
-                'ua' => $lead->getUa(),
-                'name' => $lead->getFirstName(),
-                'phone' => $lead->getPhone(),
-                'status' => $lead->getStatus(),
-                'status_comment' => $lead->getStatusComment(),
-                'offer_id' => $lead->getOffer()->getId(),
-                'utm_medium' => $lead->getUtmMedium(),
-                'utm_campaign' => $lead->getUtmCampaign(),
-                'utm_content' => $lead->getUtmContent(),
-                'utm_term' => $lead->getUtmTerm(),
-                'referer' => $lead->getReferer(),
-                'created_at' => $lead->getCreatedAt()
-            ];
+            if ($user->getId() != $lead->getUser()->getId()) {
+                $dataError = [
+                    'message' => 'This is not your lead'
+                ];
+                $status = Response::HTTP_CONFLICT;
+            }
+            if (empty($dataError)) {
+                $ip = $lead->getIp();
+                /**
+                 * @var IP $ip
+                 */
+                $dataSuccess = [
+                    'id' => $lead->getUniqueId(),
+                    'stream_id' => $lead->getStream()->getUniqueId(),
+                    'geo' => $lead->getGeo()->getName(),
+                    'ip' => $ip->getDotAddress(),
+                    'ua' => $lead->getUa(),
+                    'name' => $lead->getFirstName() ?? '',
+                    'phone' => $lead->getPhone(),
+                    'status' => $lead->getStatus(),
+                    'status_comment' => $lead->getStatusComment(),
+                    'offer_id' => $lead->getOffer()->getId(),
+                    'utm_medium' => $lead->getUtmMedium(),
+                    'utm_campaign' => $lead->getUtmCampaign(),
+                    'utm_content' => $lead->getUtmContent(),
+                    'utm_term' => $lead->getUtmTerm(),
+                    'referer' => $lead->getReferer(),
+                    'created_at' => $lead->getCreatedAt()
+                ];
+            }
         }
         if (!empty($dataError)) {
             $dataError['status'] = 'error';

@@ -117,6 +117,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $balanceOperations;
 
+    /**
+     * @ORM\Column(type="integer", options={"default": 0, "unsigned":true})
+     */
+    private $countRequestsPerTime;
+
     public function __construct()
     {
         $this->streams = new ArrayCollection();
@@ -512,6 +517,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $balanceOperation->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCountRequestsPerTime(): ?int
+    {
+        return $this->countRequestsPerTime;
+    }
+
+    public function setCountRequestsPerTime(int $countRequestsPerTime): self
+    {
+        $this->countRequestsPerTime = $countRequestsPerTime;
 
         return $this;
     }
