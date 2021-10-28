@@ -1,6 +1,17 @@
 <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
     <div class="position-sticky pt-3">
         <ul class="nav flex-column">
+            <li class="mb-1">
+                <button class="btn btn-toggle align-items-center rounded collapsed" data-toggle="collapse" data-target="#account-collapse" aria-expanded="false">
+                    Account
+                </button>
+                <div class="collapse" id="account-collapse">
+                    <ul class="btn-toggle-nav list-unsettled pb-1 small">
+                        <li><a href="{{ path('app_webmaster_profile') }}" class="link-dark rounded">{% trans %}Profile{% endtrans %}</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li class="border-top my-3"></li>
             <li class="nav-item">
                 <a
                         class="{{ 'app_webmaster_dashboard' in app.request.attributes.get('_route')  ? 'nav-link active link-dark' : 'nav-link' }}"

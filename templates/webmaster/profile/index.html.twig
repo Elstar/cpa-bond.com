@@ -69,7 +69,10 @@
         {money} - {% trans %}Lead rate{% endtrans %}<br>
         {currency} - {% trans %}Payout currency{% endtrans %}
         <hr>
-        {% trans %}Example{% endtrans %}: https://cpa-bond.com/ru/postback/test?lead_id={lead_id}&status_lead={status_lead}&utm_source={utm_source}&utm_medium={utm_medium}&utm_campaign={utm_campaign}&utm_content={utm_content}&utm_term={utm_term}&money={money}&currency={currency}
+        {% trans %}Example{% endtrans %}:
+        <code>
+            https://cpa-bond.com/ru/postback/test?lead_id={lead_id}&status_lead={status_lead}&utm_source={utm_source}&utm_medium={utm_medium}&utm_campaign={utm_campaign}&utm_content={utm_content}&utm_term={utm_term}&money={money}&amp;currency={currency}
+        </code>
     </p>
     {{ form_start(postbackForm) }}
         {{ form_widget(postbackForm) }}

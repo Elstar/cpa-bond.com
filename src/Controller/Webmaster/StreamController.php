@@ -5,6 +5,9 @@ namespace App\Controller\Webmaster;
 use App\Entity\Offer;
 use App\Entity\Stream;
 use App\Form\Webmaster\StreamFormType;
+use App\Repository\LandingRepository;
+use App\Repository\PreLandingPageRepository;
+use App\Repository\PreLandingRepository;
 use App\Repository\StreamRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -12,6 +15,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -48,9 +52,12 @@ class StreamController extends AbstractController
     public function create(Offer $offer, EntityManagerInterface $em, Request $request): Response
     {
         $stream = new Stream();
-        $stream->setOffer($offer);
-        $stream->setSum($offer->getPaySum());
-        $stream->setUser($this->getUser());
+        $stream
+            ->setOffer($offer)
+            ->setSum($offer->getPaySum())
+            ->setPayPercent($offer->getPayPercent())
+            ->setUser($this->getUser())
+        ;
         $streamForm = $this->createForm(StreamFormType::class, $stream);
 
         if ($this->handleFormRequest($streamForm, $em, $request)) {
@@ -84,12 +91,19 @@ class StreamController extends AbstractController
      */
     public function delete(Stream $stream, StreamRepository $streamRepository): Response
     {
-        if ($stream && $stream->getUser() == $this->getUser()) {
-            if ($streamRepository->deleteStream($stream))
+        if ($stream->getUser() == $this->getUser()) {
+            if ($streamRepository->deleteStream($stream)) {
                 return $this->redirectToRoute('app_webmaster_stream');
+            }
         }
     }
 
+    /**
+     * @param FormInterface $form
+     * @param EntityManagerInterface $em
+     * @param Request $request
+     * @return Stream|null
+     */
     private function handleFormRequest(FormInterface $form, EntityManagerInterface $em, Request $request): ?Stream
     {
         $form->handleRequest($request);

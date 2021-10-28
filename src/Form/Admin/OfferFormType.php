@@ -202,6 +202,7 @@ class OfferFormType extends AbstractType
                 ]
             ])
             ->add('paySum')
+            ->add('payPercent')
             ->add('image', FileType::class, [
                 'required' => false,
                 'mapped' => false,

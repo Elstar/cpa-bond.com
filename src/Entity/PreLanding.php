@@ -9,7 +9,9 @@ use Doctrine\ORM\Mapping\UniqueConstraint;
 
 /**
  * @ORM\Entity(repositoryClass=PreLandingRepository::class)
- * @Table(name="pre_landing", uniqueConstraints={@UniqueConstraint(name="unique_name", columns={"name", "category_id"})})
+ * @Table(
+ *     name="pre_landing", uniqueConstraints={@UniqueConstraint(name="unique_name", columns={"name", "category_id"})}
+ *     )
  */
 class PreLanding
 {
@@ -40,6 +42,11 @@ class PreLanding
      * @ORM\JoinColumn(nullable=false)
      */
     private $category;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $downloadUrl;
 
     public function getId(): ?int
     {
@@ -90,6 +97,18 @@ class PreLanding
     public function setCategory(?Category $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    public function getDownloadUrl(): ?string
+    {
+        return $this->downloadUrl;
+    }
+
+    public function setDownloadUrl(?string $downloadUrl): self
+    {
+        $this->downloadUrl = $downloadUrl;
 
         return $this;
     }

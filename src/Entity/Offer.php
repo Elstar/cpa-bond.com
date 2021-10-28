@@ -110,6 +110,11 @@ class Offer
      */
     private $sum;
 
+    /**
+     * @ORM\Column(type="float", nullable=true, options={"comment": "Percent for pay by model CPS (pay_types)"})
+     */
+    private $payPercent;
+
     public function __construct()
     {
         $this->Geo = new ArrayCollection();
@@ -362,6 +367,18 @@ class Offer
     public function setSum(int $sum): self
     {
         $this->sum = $sum;
+
+        return $this;
+    }
+
+    public function getPayPercent(): ?float
+    {
+        return $this->payPercent;
+    }
+
+    public function setPayPercent(?float $payPercent): self
+    {
+        $this->payPercent = $payPercent;
 
         return $this;
     }

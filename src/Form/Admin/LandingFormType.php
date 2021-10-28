@@ -29,6 +29,7 @@ class LandingFormType extends AbstractType
         $builder
             ->add('name')
             ->add('url')
+            ->add('downloadUrl')
             ->add('category', HiddenType::class, [
                 'mapped' => false,
                 'data' => $platform->getCategory()->getId()

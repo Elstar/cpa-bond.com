@@ -1,5 +1,4 @@
-#GET http://127.0.0.1:8000/api/v1/get-lead/6151ca5ebf18f
-GET https://cpa-bond.com/api/v1/get-lead/6151ca5ebf18f
+GET https://cpa-bond.com/api/v1/get-lead/6151ca5ebff8f
 Content-Type: application/json
 Accept: application/json
-Authorization: Bearer a66a3730add6f9c22f347abdfd87f006
+Authorization: Bearer a66a3730add6f9c22f347abdff87f006

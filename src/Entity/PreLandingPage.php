@@ -41,6 +41,11 @@ class PreLandingPage
      */
     private $category;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $downloadUrl;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -90,6 +95,18 @@ class PreLandingPage
     public function setCategory(?Category $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    public function getDownloadUrl(): ?string
+    {
+        return $this->downloadUrl;
+    }
+
+    public function setDownloadUrl(?string $downloadUrl): self
+    {
+        $this->downloadUrl = $downloadUrl;
 
         return $this;
     }

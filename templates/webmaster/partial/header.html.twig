@@ -1,10 +1,10 @@
-<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+<!--<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
     <div class="container-fluid">
         <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="{{ path('app_webmaster_dashboard') }}">CPA Bond</a>
         <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="w-100"></div>
+        <div class="mr-auto"></div>
         <div class="dropdown">
             <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="dropdownLanguage" data-toggle="dropdown" aria-expanded="false">
                 <img
@@ -15,7 +15,8 @@
                         {% elseif app.request.locale == 'en' %}
                             src="{{ asset('images/flags/united-states-of-america-flag-png-small.jpg') }}"
                         {% endif %}
-                        alt="" width="32" height="32" class="rounded-circle me-2">
+                        alt="" width="32" height="32" class="rounded-circle me-2"
+                >
             </a>
             <ul class="dropdown-menu dropdown-menu-dark text-small shadow w-25" aria-labelledby="dropdownLanguage">
                 <li><a class="dropdown-item" href="{{ path('app_webmaster_dashboard.uk') }}"><img src="{{ asset('images/flags/ukraine-flag-png-small.jpg') }}"></a></li>
@@ -37,4 +38,35 @@
             </div>
         </div>
     </div>
-</header>
+</header>-->
+<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+    <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="{{ path('app_webmaster_dashboard') }}">CPA Bond</a>
+    <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="mr-auto"></div>
+    <div class="dropdown dropleft">
+        <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="dropdownLanguage" data-toggle="dropdown" aria-expanded="false">
+            <img
+                    {% if app.request.locale == 'uk' %}
+                        src="{{ asset('images/flags/ukraine-flag-png-small.jpg') }}"
+                    {% elseif app.request.locale == 'ru' %}
+                        src="{{ asset('images/flags/russia-flag-png-small.jpg') }}"
+                    {% elseif app.request.locale == 'en' %}
+                        src="{{ asset('images/flags/united-states-of-america-flag-png-small.jpg') }}"
+                    {% endif %}
+                    alt="" width="32" height="32" class="rounded-circle me-2"
+            >
+        </a>
+        <div class="dropdown-menu dropdown-menu-dark">
+            <a class="dropdown-item" href="{{ path('app_webmaster_dashboard.uk') }}"><img src="{{ asset('images/flags/ukraine-flag-png-small.jpg') }}"> UA</a>
+            <a class="dropdown-item" href="{{ path('app_webmaster_dashboard.ru') }}"><img src="{{ asset('images/flags/russia-flag-png-small.jpg') }}"> RU</a>
+            <a class="dropdown-item" href="{{ path('app_webmaster_dashboard.en') }}"><img src="{{ asset('images/flags/united-states-of-america-flag-png-small.jpg') }}"> EN</a>
+        </div>
+    </div>
+    <ul class="navbar-nav px-3">
+        <li class="nav-item text-nowrap">
+            <a class="nav-link" href="{{ path('app_logout') }}">{% trans %}Sign out{% endtrans %}</a>
+        </li>
+    </ul>
+</nav>
