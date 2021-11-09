@@ -24,15 +24,18 @@ class SecurityController extends AbstractController
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         if ($this->getUser()) {
+            if ($this->isGranted('ROLE_ADMIN')) {
+                return $this->redirectToRoute('app_admin_dashboard');
+            }
             return $this->redirectToRoute('app_webmaster_dashboard');
         }
 
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
         // last username entered by the user
-        $lastUsername = $authenticationUtils->getLastUsername();
+        $last_username = $authenticationUtils->getLastUsername();
 
-        return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+        return $this->render('security/login.html.twig', ['last_username' => $last_username, 'error' => $error]);
     }
 
     /**
@@ -52,19 +55,19 @@ class SecurityController extends AbstractController
             /**
              * @var UserRegistrationFormModel $userModel
              */
-            $userModel = $form->getData();
+            $user_model = $form->getData();
             $user = new User();
-            $user->setEmail($userModel->email)
-                ->setFirstName($userModel->firstName)
-                ->setPassword($passwordEncoder->hashPassword($user, $userModel->plainPassword))
+            $user->setEmail($user_model->email)
+                ->setFirstName($user_model->firstName)
+                ->setPassword($passwordEncoder->hashPassword($user, $user_model->plainPassword))
                 ->setActivate(0)
                 ->setBalance(0)
-                ->setTelegram($userModel->telegram)
-                ->setViber($userModel->viber)
-                ->setSkype($userModel->skype)
+                ->setTelegram($user_model->telegram)
+                ->setViber($user_model->viber)
+                ->setSkype($user_model->skype)
                 ->setPayOutAccess(0)
                 ->setCountRequestsPerTime(0)
-                ->setApiToken(md5(uniqid('token_' . $userModel->email . rand(), true)));
+                ->setApiToken(md5(uniqid('token_' . $user_model->email . rand(), true)));
             $em->persist($user);
             $em->flush();
 

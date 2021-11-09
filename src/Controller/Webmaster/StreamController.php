@@ -56,8 +56,7 @@ class StreamController extends AbstractController
             ->setOffer($offer)
             ->setSum($offer->getPaySum())
             ->setPayPercent($offer->getPayPercent())
-            ->setUser($this->getUser())
-        ;
+            ->setUser($this->getUser());
         $streamForm = $this->createForm(StreamFormType::class, $stream);
 
         if ($this->handleFormRequest($streamForm, $em, $request)) {

@@ -29,7 +29,7 @@ $apiKey = "d025e4d6462b991ccc2448d9116ddfd6";// Заменяем на свой �
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, "https://cpa-bond.com/api/v1/new-lead");
 curl_setopt($ch, CURLOPT_POST, 1);
-curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
 $headers[] = 'Authorization: Bearer ' . $apiKey;
 $headers[] = 'Content-Type: application/json';
 curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);

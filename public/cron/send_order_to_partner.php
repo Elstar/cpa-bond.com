@@ -19,6 +19,7 @@ if (!empty($needSendLeads)) {
         $stream = pdoHelper::getInstance()->selectRow("SELECT * FROM stream WHERE id=?", [$needSendLead['stream_id']]);
         $offer = pdoHelper::getInstance()->selectRow("SELECT * FROM offer WHERE id=?", [$needSendLead['offer_id']]);
         $partner = pdoHelper::getInstance()->selectRow("SELECT * FROM partners WHERE id=?", [$offer['partner_id']]);
+        $postback_global = pdoHelper::getInstance()->selectRow("SELECT * FROM postback WHERE user_id=?", $stream['user_id']);
 
         $partnerAdditionalParams = pdoHelper::getInstance()->selectRows("SELECT * FROM partner_additional_params WHERE partner_id=?",
             [$offer['partner_id']]);
@@ -90,6 +91,9 @@ if (!empty($needSendLeads)) {
                 //проверяем есть ли ссылка для отправки постбека успешного заказа
                 if ($stream['postback_create']) {
                     $postbackLink = settings::setPostBackLink($stream['postback_create'], $needSendLead);
+                }
+                if ($postback_global['lead_create']) {
+                    $postbackLink = settings::setPostBackLink($postback_global['lead_create'], $needSendLead);
                 }
             } else {
                 //Ошибка передачи заказа партнеру

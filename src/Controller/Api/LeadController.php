@@ -44,8 +44,8 @@ class LeadController extends AbstractController
         EntityManagerInterface $em,
         ContainerInterface $container
     ): Response {
-        $dataError = [];
-        $dataSuccess = [];
+        $data_error = [];
+        $data_success = [];
         $status = 200;
 
         /**
@@ -55,24 +55,24 @@ class LeadController extends AbstractController
 
         //Check requests limit (per minute)
         if ($user->getCountRequestsPerTime() > $container->getParameter('api_count_requests_per_time_limit')) {
-            $dataError = [
+            $data_error = [
                 'message' => 'You have request limit, try bit later'
             ];
-            return new JsonResponse($dataError, Response::HTTP_LOCKED);
+            return new JsonResponse($data_error, Response::HTTP_LOCKED);
         }
 
-        if (empty($dataError) && $request->getMethod() != 'POST') {
-            $dataError = [
+        if (empty($data_error) && $request->getMethod() != 'POST') {
+            $data_error = [
                 'message' => 'You need POST method for order create'
             ];
             $status = Response::HTTP_CONFLICT;
         }
 
-        if (empty($dataError) && 0 === strpos($request->headers->get('Content-Type'), 'application/json')) {
+        if (empty($data_error) && 0 === strpos($request->headers->get('Content-Type'), 'application/json')) {
             $data = json_decode($request->getContent(), true);
             $ip = IP::factory($data['ip']);
-        } elseif (empty($dataError)) {
-            $dataError = [
+        } elseif (empty($data_error)) {
+            $data_error = [
                 'message' => 'You need use application/json Content-Type for order create'
             ];
             $status = Response::HTTP_CONFLICT;
@@ -81,7 +81,7 @@ class LeadController extends AbstractController
 
         if (!empty($data)) {
             if (empty($data['stream_id'])) {
-                $dataError = [
+                $data_error = [
                     'message' => 'Empty stream_id',
                 ];
                 $status = Response::HTTP_BAD_REQUEST;
@@ -93,7 +93,7 @@ class LeadController extends AbstractController
                 $stream = $streamRepository->findOneBy(['uniqueId' => trim($data['stream_id'])]);
 
                 if (empty($stream) || $stream->getUser()->getId() != $user->getId()) {
-                    $dataError = [
+                    $data_error = [
                         'message' => 'Wrong stream_id'
                     ];
                 }
@@ -102,29 +102,29 @@ class LeadController extends AbstractController
                     || ($stream && $stream->getGeo()->getName() != $data['geo'])
                     //|| $this->geoIp->country($ip->getDotAddress())->country->isoCode != $stream->getGeo()->getName()
                 ) {
-                    $dataError = [
+                    $data_error = [
                         'message' => 'Wrong or empty geo'
                     ];
                 }
                 if (empty($data['phone'])) {
-                    $dataError = [
+                    $data_error = [
                         'message' => 'Phone is empty'
                     ];
                 }
                 if ($stream) {
                     $hash = md5($stream->getOffer()->getId() . '-' . $data['phone']);
                     if ($this->leadRepository->getLastLeadsFromOneIpCount($ip, $stream) > 10) {
-                        $dataError = [
+                        $data_error = [
                             'message' => 'To much orders from one IP'
                         ];
                     }
                     if ($this->leadRepository->getLastLeadsByOfferAndPhoneCount($hash) > 10) {
-                        $dataError = [
+                        $data_error = [
                             'message' => 'Duplicated lead in system'
                         ];
                     }
                 }
-                if (empty($dataError)) {
+                if (empty($data_error)) {
                     $lead = new Lead();
                     $lead
                         ->setStream($stream)
@@ -169,7 +169,7 @@ class LeadController extends AbstractController
                     $em->persist($lead);
                     $em->persist($user);
                     $em->flush();
-                    $dataSuccess = [
+                    $data_success = [
                         'lead_id' => $lead->getUniqueId(),
                         'status' => 'ok'
                     ];
@@ -177,19 +177,19 @@ class LeadController extends AbstractController
                     $status = Response::HTTP_BAD_REQUEST;
                 }
             }
-        } elseif (empty($dataError)) {
-            $dataError = [
+        } elseif (empty($data_error)) {
+            $data_error = [
                 'message' => 'Empty data'
             ];
             $status = Response::HTTP_BAD_REQUEST;
         }
 
-        if (!empty($dataError)) {
-            $dataError['status'] = 'error';
-            return new JsonResponse($dataError, $status);
+        if (!empty($data_error)) {
+            $data_error['status'] = 'error';
+            return new JsonResponse($data_error, $status);
         }
 
-        return $this->json($dataSuccess, $status, []);
+        return $this->json($data_success, $status, []);
     }
 
     /**
@@ -199,7 +199,8 @@ class LeadController extends AbstractController
     public function getLead(?Lead $lead, Request $request, EntityManagerInterface $em): Response
     {
         $status = 200;
-        $dataSuccess = [];
+        $data_error = [];
+        $data_success = [];
 
         /**
          * @var User $user
@@ -207,30 +208,30 @@ class LeadController extends AbstractController
         $user = $this->getUser();
 
         if ($request->getMethod() != 'GET') {
-            $dataError = [
+            $data_error = [
                 'message' => 'You need GET method for get lead'
             ];
             $status = Response::HTTP_METHOD_NOT_ALLOWED;
         }
 
         if (empty($lead)) {
-            $dataError = [
+            $data_error = [
                 'message' => 'Empty data'
             ];
             $status = Response::HTTP_BAD_REQUEST;
         } else {
             if ($user->getId() != $lead->getUser()->getId()) {
-                $dataError = [
+                $data_error = [
                     'message' => 'This is not your lead'
                 ];
                 $status = Response::HTTP_CONFLICT;
             }
-            if (empty($dataError)) {
+            if (empty($data_error)) {
                 $ip = $lead->getIp();
                 /**
                  * @var IP $ip
                  */
-                $dataSuccess = [
+                $data_success = [
                     'id' => $lead->getUniqueId(),
                     'stream_id' => $lead->getStream()->getUniqueId(),
                     'geo' => $lead->getGeo()->getName(),
@@ -250,10 +251,10 @@ class LeadController extends AbstractController
                 ];
             }
         }
-        if (!empty($dataError)) {
-            $dataError['status'] = 'error';
-            return new JsonResponse($dataError, $status);
+        if (!empty($data_error)) {
+            $data_error['status'] = 'error';
+            return new JsonResponse($data_error, $status);
         }
-        return $this->json($dataSuccess, $status, []);
+        return $this->json($data_success, $status, []);
     }
 }
