@@ -22,6 +22,10 @@ Encore
      */
     .addEntry('app', './assets/app.js')
 
+    /**
+    * add Entry to cpa landing page
+    */
+    .addEntry('cpa_landing', './assets/landingPageEntry.js')
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')
 
