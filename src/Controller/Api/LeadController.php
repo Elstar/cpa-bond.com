@@ -17,26 +17,32 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 
 class LeadController extends AbstractController
 {
     private Reader $geoIp;
     private LeadRepository $leadRepository;
+    private HttpClientInterface $httpClient;
 
     /**
      * LeadController constructor.
      * @throws \MaxMind\Db\Reader\InvalidDatabaseException
      */
-    public function __construct(LeadRepository $leadRepository)
+    public function __construct(LeadRepository $leadRepository, HttpClientInterface $httpClient)
     {
         $this->geoIp = new Reader(__DIR__ . '/../../geoIp/GeoIP2-Country.mmdb');
         $this->leadRepository = $leadRepository;
+        $this->httpClient = $httpClient;
     }
 
     /**
      * @Route("/api/v1/new-lead", name="api_order")
      * @IsGranted("ROLE_USER")
+     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
      */
     public function create(
         Request $request,
@@ -173,6 +179,27 @@ class LeadController extends AbstractController
                         'lead_id' => $lead->getUniqueId(),
                         'status' => 'ok'
                     ];
+                    //check postback
+                    if ($postback_link = $stream->getPostbackCreate()) {
+                        try {
+                            $this->httpClient->request(
+                                'GET',
+                                $user->getPostback()->setPostbackLink($postback_link, $lead)
+                            );
+                        } catch (TransportExceptionInterface $exception) {
+                            $wrong_postback = 1;
+                        }
+                    }
+                    if ($postback_link = $user->getPostback()->getLeadCreate()) {
+                        try {
+                            $this->httpClient->request(
+                                'GET',
+                                $user->getPostback()->setPostbackLink($postback_link, $lead)
+                            );
+                        } catch (TransportExceptionInterface $exception) {
+                            $wrong_postback = 1;
+                        }
+                    }
                 } else {
                     $status = Response::HTTP_BAD_REQUEST;
                 }
