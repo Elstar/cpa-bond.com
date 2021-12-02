@@ -129,7 +129,7 @@ class settings
                     $lead['utm_campaign'],
                     $lead['utm_content'],
                     $lead['utm_term'],
-                    $lead['money'],
+                    $lead['stream']['sum'],
                     $lead['currency']
                 ],
                 $postbackLink

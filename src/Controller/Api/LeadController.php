@@ -7,6 +7,7 @@ use App\Entity\Stream;
 use App\Entity\User;
 use App\Repository\LeadRepository;
 use App\Repository\StreamRepository;
+use App\Service\PostbackBuilder;
 use Darsyn\IP\Version\Multi as IP;
 use Doctrine\ORM\EntityManagerInterface;
 use GeoIp2\Database\Reader;
@@ -48,7 +49,8 @@ class LeadController extends AbstractController
         Request $request,
         StreamRepository $streamRepository,
         EntityManagerInterface $em,
-        ContainerInterface $container
+        ContainerInterface $container,
+        PostbackBuilder $postbackBuilder
     ): Response {
         $data_error = [];
         $data_success = [];
@@ -184,17 +186,17 @@ class LeadController extends AbstractController
                         try {
                             $this->httpClient->request(
                                 'GET',
-                                $user->getPostback()->setPostbackLink($postback_link, $lead)
+                                $postbackBuilder->getPostbackLink($postback_link, $lead)
                             );
                         } catch (TransportExceptionInterface $exception) {
                             $wrong_postback = 1;
                         }
                     }
-                    if ($postback_link = $user->getPostback()->getLeadCreate()) {
+                    if (!is_null($user->getPostback()) && $postback_link = $user->getPostback()->getLeadCreate()) {
                         try {
                             $this->httpClient->request(
                                 'GET',
-                                $user->getPostback()->setPostbackLink($postback_link, $lead)
+                                $postbackBuilder->getPostbackLink($postback_link, $lead)
                             );
                         } catch (TransportExceptionInterface $exception) {
                             $wrong_postback = 1;
